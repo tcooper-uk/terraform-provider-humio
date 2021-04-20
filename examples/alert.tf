@@ -2,7 +2,7 @@ resource "humio_alert" "example_alert_with_labels" {
   repository  = humio_notifier.example_email.repository
   name        = "example_alert_with_labels"
 
-  notifiers   = [humio_notifier.example_email.id]
+  notifiers   = [humio_notifier.example_email.notifier_id]
 
   labels               = ["terraform", "ops"]
   throttle_time_millis = 300000
