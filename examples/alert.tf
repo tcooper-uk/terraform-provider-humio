@@ -15,7 +15,7 @@ resource "humio_alert" "example_alert_without_labels" {
   repository  = humio_notifier.example_email_body.repository
   name        = "example_alert_without_labels"
 
-  notifiers = [humio_notifier.example_email_body.id]
+  notifiers = [humio_notifier.example_email_body.notifier_id]
 
   throttle_time_millis = 300000
   silenced             = true
@@ -29,8 +29,8 @@ resource "humio_alert" "example_alert_with_description" {
   description = "lorem ipsum...."
 
   notifiers = [
-    humio_notifier.example_email_body.id,
-    humio_notifier.example_email_subject.id,
+    humio_notifier.example_email_body.notifier_id,
+    humio_notifier.example_email_subject.notifier_id,
   ]
 
   link_url             = "http://localhost:8080/humio/search?query=count()&live=true&start=24h&fullscreen=false"
