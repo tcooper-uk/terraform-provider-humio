@@ -18,7 +18,7 @@ require (
 	github.com/hashicorp/hcl/v2 v2.7.0 // indirect
 	github.com/hashicorp/terraform-plugin-sdk/v2 v2.4.0
 	github.com/hashicorp/yamux v0.0.0-20200609203250-aecfd211c9ce // indirect
-	github.com/humio/cli v0.28.1-0.20201030131302-71feac63d095
+	github.com/humio/cli v0.29.1
 	github.com/imdario/mergo v0.3.11 // indirect
 	github.com/mitchellh/go-testing-interface v1.14.1 // indirect
 	github.com/mitchellh/go-wordwrap v1.0.1 // indirect
