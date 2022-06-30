@@ -1,4 +1,4 @@
-resource "humio_notifier" "example_opsgenie" {
+resource "humio_action" "example_opsgenie" {
   repository = "humio"
   name       = "example_opsgenie"
   type     = "OpsGenieAction"

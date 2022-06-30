@@ -31,18 +31,18 @@ import (
 
 var rxEmail = regexp.MustCompile("^[a-zA-Z0-9.!#$%&'*+\\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$")
 
-func resourceNotifier() *schema.Resource {
+func resourceAction() *schema.Resource {
 	return &schema.Resource{
-		CreateContext: resourceNotifierCreate,
-		ReadContext:   resourceNotifierRead,
-		UpdateContext: resourceNotifierUpdate,
-		DeleteContext: resourceNotifierDelete,
+		CreateContext: resourceActionCreate,
+		ReadContext:   resourceActionRead,
+		UpdateContext: resourceActionUpdate,
+		DeleteContext: resourceActionDelete,
 		Importer: &schema.ResourceImporter{
 			StateContext: schema.ImportStatePassthroughContext,
 		},
 
 		Schema: map[string]*schema.Schema{
-			"notifier_id": {
+			"action_id": {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
@@ -245,7 +245,7 @@ func resourceNotifier() *schema.Resource {
 						"body_template": {
 							Type:     schema.TypeString,
 							Optional: true,
-							Default:  "{\n  \"repository\": \"{repo_name}\",\n  \"timestamp\": \"{alert_triggered_timestamp}\",\n  \"alert\": {\n    \"name\": \"{alert_name}\",\n    \"description\": \"{alert_description}\",\n    \"query\": {\n      \"queryString\": \"{query_string} \",\n      \"end\": \"{query_time_end}\",\n      \"start\": \"{query_time_start}\"\n    },\n    \"notifierID\": \"{alert_notifier_id}\",\n    \"id\": \"{alert_id}\"\n  },\n  \"warnings\": \"{warnings}\",\n  \"events\": {events},\n  \"numberOfEvents\": {event_count}\n  }",
+							Default:  "{\n  \"repository\": \"{repo_name}\",\n  \"timestamp\": \"{alert_triggered_timestamp}\",\n  \"alert\": {\n    \"name\": \"{alert_name}\",\n    \"description\": \"{alert_description}\",\n    \"query\": {\n      \"queryString\": \"{query_string} \",\n      \"end\": \"{query_time_end}\",\n      \"start\": \"{query_time_start}\"\n    },\n    \"actionID\": \"{alert_action_id}\",\n    \"id\": \"{alert_id}\"\n  },\n  \"warnings\": \"{warnings}\",\n  \"events\": {events},\n  \"numberOfEvents\": {event_count}\n  }",
 						},
 						"headers": {
 							Type:     schema.TypeMap,
@@ -276,8 +276,8 @@ func resourceNotifier() *schema.Resource {
 	}
 }
 
-func resourceNotifierCreate(ctx context.Context, d *schema.ResourceData, client interface{}) diag.Diagnostics {
-	action, err := notifierFromResourceData(d)
+func resourceActionCreate(ctx context.Context, d *schema.ResourceData, client interface{}) diag.Diagnostics {
+	action, err := actionFromResourceData(d)
 	if err != nil {
 		return diag.Errorf("could not obtain action from resource data: %s", err)
 	}
@@ -291,16 +291,16 @@ func resourceNotifierCreate(ctx context.Context, d *schema.ResourceData, client 
 	}
 	d.SetId(fmt.Sprintf("%s+%s", d.Get("repository").(string), a.Name))
 
-	return resourceNotifierRead(ctx, d, client)
+	return resourceActionRead(ctx, d, client)
 }
 
-func resourceNotifierRead(_ context.Context, d *schema.ResourceData, client interface{}) diag.Diagnostics {
+func resourceActionRead(_ context.Context, d *schema.ResourceData, client interface{}) diag.Diagnostics {
 	parts := parseRepositoryAndID(d.Id())
 	// If we don't have a repository when importing, we parse it from the ID.
 	if _, ok := d.GetOk("repository"); !ok {
 		//we check that we have parsed the id into the correct number of segments
 		if parts[0] == "" || parts[1] == "" {
-			return diag.Errorf("error importing humio_notifier. Please make sure the ID is in the form REPOSITORYNAME+NOTIFIERID (i.e. myRepoName+12345678901234567890123456789012")
+			return diag.Errorf("error importing humio_action. Please make sure the ID is in the form REPOSITORYNAME+NOTIFIERID (i.e. myRepoName+12345678901234567890123456789012")
 		}
 		err := d.Set("repository", parts[0])
 		if err != nil {
@@ -319,13 +319,13 @@ func resourceNotifierRead(_ context.Context, d *schema.ResourceData, client inte
 	if err != nil || reflect.DeepEqual(*action, humio.Action{}) {
 		return diag.Errorf("could not get action: %s", err)
 	}
-	return resourceDataFromNotifier(action, d)
+	return resourceDataFromAction(action, d)
 }
 
-func resourceDataFromNotifier(a *humio.Action, d *schema.ResourceData) diag.Diagnostics {
-	err := d.Set("notifier_id", a.ID)
+func resourceDataFromAction(a *humio.Action, d *schema.ResourceData) diag.Diagnostics {
+	err := d.Set("action_id", a.ID)
 	if err != nil {
-		return diag.Errorf("could not set notifier_id for action: %s", err)
+		return diag.Errorf("could not set action_id for action: %s", err)
 	}
 	err = d.Set("name", a.Name)
 	if err != nil {
@@ -338,35 +338,35 @@ func resourceDataFromNotifier(a *humio.Action, d *schema.ResourceData) diag.Diag
 
 	switch a.Type {
 	case humio.ActionTypeEmail:
-		if err := d.Set("email", emailFromNotifier(a)); err != nil {
+		if err := d.Set("email", emailFromAction(a)); err != nil {
 			return diag.Errorf("error setting email settings for resource %s: %s", d.Id(), err)
 		}
 	case humio.ActionTypeHumioRepo:
-		if err := d.Set("humiorepo", humiorepoFromNotifier(a)); err != nil {
+		if err := d.Set("humiorepo", humiorepoFromAction(a)); err != nil {
 			return diag.Errorf("error setting humiorepo settings for resource %s: %s", d.Id(), err)
 		}
 	case humio.ActionTypeOpsGenie:
-		if err := d.Set("opsgenie", opsgenieFromNotifier(a)); err != nil {
+		if err := d.Set("opsgenie", opsgenieFromAction(a)); err != nil {
 			return diag.Errorf("error setting opsgenie settings for resource %s: %s", d.Id(), err)
 		}
 	case humio.ActionTypePagerDuty:
-		if err := d.Set("pagerduty", pagerdutyFromNotifier(a)); err != nil {
+		if err := d.Set("pagerduty", pagerdutyFromAction(a)); err != nil {
 			return diag.Errorf("error setting pagerduty settings for resource %s: %s", d.Id(), err)
 		}
 	case humio.ActionTypeSlack:
-		if err := d.Set("slack", slackFromNotifier(a)); err != nil {
+		if err := d.Set("slack", slackFromAction(a)); err != nil {
 			return diag.Errorf("error setting slack settings for resource %s: %s", d.Id(), err)
 		}
 	case humio.ActionTypeSlackPostMessage:
-		if err := d.Set("slackpostmessage", slackpostmessageFromNotifier(a)); err != nil {
+		if err := d.Set("slackpostmessage", slackpostmessageFromAction(a)); err != nil {
 			return diag.Errorf("error setting slackpostmessage settings for resource %s: %s", d.Id(), err)
 		}
 	case humio.ActionTypeVictorOps:
-		if err := d.Set("victorops", victoropsFromNotifier(a)); err != nil {
+		if err := d.Set("victorops", victoropsFromAction(a)); err != nil {
 			return diag.Errorf("error setting victorops settings for resource %s: %s", d.Id(), err)
 		}
 	case humio.ActionTypeWebhook:
-		if err := d.Set("webhook", webhookFromNotifier(a)); err != nil {
+		if err := d.Set("webhook", webhookFromAction(a)); err != nil {
 			return diag.Errorf("error setting webhook settings for resource %s: %s", d.Id(), err)
 		}
 	default:
@@ -376,8 +376,8 @@ func resourceDataFromNotifier(a *humio.Action, d *schema.ResourceData) diag.Diag
 	return nil
 }
 
-func resourceNotifierUpdate(ctx context.Context, d *schema.ResourceData, client interface{}) diag.Diagnostics {
-	action, err := notifierFromResourceData(d)
+func resourceActionUpdate(ctx context.Context, d *schema.ResourceData, client interface{}) diag.Diagnostics {
+	action, err := actionFromResourceData(d)
 	if err != nil {
 		return diag.Errorf("could not obtain action from resource data: %s", err)
 	}
@@ -390,11 +390,11 @@ func resourceNotifierUpdate(ctx context.Context, d *schema.ResourceData, client 
 		return diag.Errorf("could not update action: %s", err)
 	}
 
-	return resourceNotifierRead(ctx, d, client)
+	return resourceActionRead(ctx, d, client)
 }
 
-func resourceNotifierDelete(_ context.Context, d *schema.ResourceData, client interface{}) diag.Diagnostics {
-	action, err := notifierFromResourceData(d)
+func resourceActionDelete(_ context.Context, d *schema.ResourceData, client interface{}) diag.Diagnostics {
+	action, err := actionFromResourceData(d)
 	if err != nil {
 		return diag.Errorf("could not obtain action from resource data: %s", err)
 	}
@@ -409,17 +409,17 @@ func resourceNotifierDelete(_ context.Context, d *schema.ResourceData, client in
 	return nil
 }
 
-// notifierFromResourceData returns a humio.Action based on either the new change or the current state depending on update bool.
-func notifierFromResourceData(d *schema.ResourceData) (humio.Action, error) {
+// actionFromResourceData returns a humio.Action based on either the new change or the current state depending on update bool.
+func actionFromResourceData(d *schema.ResourceData) (humio.Action, error) {
 	action := humio.Action{
 		Type: d.Get("type").(string),
-		ID:   d.Get("notifier_id").(string),
+		ID:   d.Get("action_id").(string),
 		Name: d.Get("name").(string),
 	}
 
 	switch d.Get("type") {
 	case humio.ActionTypeEmail:
-		properties := getNotifierPropertiesFromResourceData(d, "email", "recipients")
+		properties := getActionPropertiesFromResourceData(d, "email", "recipients")
 		var recipients []string
 		for _, recipient := range properties[0]["recipients"].([]interface{}) {
 			recipients = append(recipients, recipient.(string))
@@ -430,24 +430,24 @@ func notifierFromResourceData(d *schema.ResourceData) (humio.Action, error) {
 			SubjectTemplate: properties[0]["subject_template"].(string),
 		}
 	case humio.ActionTypeHumioRepo:
-		properties := getNotifierPropertiesFromResourceData(d, "humiorepo", "ingest_token")
+		properties := getActionPropertiesFromResourceData(d, "humiorepo", "ingest_token")
 		action.HumioRepoAction = humio.HumioRepoAction{
 			IngestToken: properties[0]["ingest_token"].(string),
 		}
 	case humio.ActionTypeOpsGenie:
-		properties := getNotifierPropertiesFromResourceData(d, "opsgenie", "genie_key")
+		properties := getActionPropertiesFromResourceData(d, "opsgenie", "genie_key")
 		action.OpsGenieAction = humio.OpsGenieAction{
 			ApiUrl:   properties[0]["api_url"].(string),
 			GenieKey: properties[0]["genie_key"].(string),
 		}
 	case humio.ActionTypePagerDuty:
-		properties := getNotifierPropertiesFromResourceData(d, "pagerduty", "routing_key")
+		properties := getActionPropertiesFromResourceData(d, "pagerduty", "routing_key")
 		action.PagerDutyAction = humio.PagerDutyAction{
 			RoutingKey: properties[0]["routing_key"].(string),
 			Severity:   properties[0]["severity"].(string),
 		}
 	case humio.ActionTypeSlack:
-		properties := getNotifierPropertiesFromResourceData(d, "slack", "url")
+		properties := getActionPropertiesFromResourceData(d, "slack", "url")
 		fields := []humio.SlackFieldEntryInput{}
 		for fieldName, value := range properties[0]["fields"].(map[string]interface{}) {
 			fields = append(fields, humio.SlackFieldEntryInput{
@@ -460,7 +460,7 @@ func notifierFromResourceData(d *schema.ResourceData) (humio.Action, error) {
 			Fields: fields,
 		}
 	case humio.ActionTypeSlackPostMessage:
-		properties := getNotifierPropertiesFromResourceData(d, "slackpostmessage", "api_token")
+		properties := getActionPropertiesFromResourceData(d, "slackpostmessage", "api_token")
 		fields := []humio.SlackFieldEntryInput{}
 		for fieldName, value := range properties[0]["fields"].(map[string]interface{}) {
 			fields = append(fields, humio.SlackFieldEntryInput{
@@ -475,13 +475,13 @@ func notifierFromResourceData(d *schema.ResourceData) (humio.Action, error) {
 			UseProxy: properties[0]["use_proxy"].(bool),
 		}
 	case humio.ActionTypeVictorOps:
-		properties := getNotifierPropertiesFromResourceData(d, "victorops", "notify_url")
+		properties := getActionPropertiesFromResourceData(d, "victorops", "notify_url")
 		action.VictorOpsAction = humio.VictorOpsAction{
 			MessageType: properties[0]["message_type"].(string),
 			NotifyUrl:   properties[0]["notify_url"].(string),
 		}
 	case humio.ActionTypeWebhook:
-		properties := getNotifierPropertiesFromResourceData(d, "webhook", "url")
+		properties := getActionPropertiesFromResourceData(d, "webhook", "url")
 		action.WebhookAction = humio.WebhookAction{
 			BodyTemplate: properties[0]["body_template"].(string),
 			Headers:      properties[0]["headers"].([]humio.HttpHeaderEntryInput),
@@ -495,14 +495,14 @@ func notifierFromResourceData(d *schema.ResourceData) (humio.Action, error) {
 	return action, nil
 }
 
-// getNotifierPropertiesFromResourceData returns the first non-empty set of action properties related to a given action.
+// getActionPropertiesFromResourceData returns the first non-empty set of action properties related to a given action.
 // We do this as a workaround for an issue where we get a list longer than 1 which should not happen given MaxItems is
 // set to 1 in the schema definition.
-func getNotifierPropertiesFromResourceData(d *schema.ResourceData, notifierName, requiredPropertyName string) []tfMap {
-	_, newProperties := d.GetChange(notifierName)
+func getActionPropertiesFromResourceData(d *schema.ResourceData, actionName, requiredPropertyName string) []tfMap {
+	_, newProperties := d.GetChange(actionName)
 	newPropertiesList := newProperties.(*schema.Set).List()
 	if len(newPropertiesList) == 0 {
-		properties := d.Get(notifierName).(*schema.Set).List()[0]
+		properties := d.Get(actionName).(*schema.Set).List()[0]
 		return []tfMap{properties.(tfMap)}
 	}
 	for idx := range newPropertiesList {
@@ -514,7 +514,7 @@ func getNotifierPropertiesFromResourceData(d *schema.ResourceData, notifierName,
 	return []tfMap{}
 }
 
-func emailFromNotifier(a *humio.Action) []tfMap {
+func emailFromAction(a *humio.Action) []tfMap {
 	s := tfMap{}
 	s["recipients"] = a.EmailAction.Recipients
 	s["body_template"] = a.EmailAction.BodyTemplate
@@ -522,27 +522,27 @@ func emailFromNotifier(a *humio.Action) []tfMap {
 	return []tfMap{s}
 }
 
-func humiorepoFromNotifier(a *humio.Action) []tfMap {
+func humiorepoFromAction(a *humio.Action) []tfMap {
 	s := tfMap{}
 	s["ingest_token"] = a.HumioRepoAction.IngestToken
 	return []tfMap{s}
 }
 
-func opsgenieFromNotifier(a *humio.Action) []tfMap {
+func opsgenieFromAction(a *humio.Action) []tfMap {
 	s := tfMap{}
 	s["api_url"] = a.OpsGenieAction.ApiUrl
 	s["genie_key"] = a.OpsGenieAction.GenieKey
 	return []tfMap{s}
 }
 
-func pagerdutyFromNotifier(a *humio.Action) []tfMap {
+func pagerdutyFromAction(a *humio.Action) []tfMap {
 	s := tfMap{}
 	s["routing_key"] = a.PagerDutyAction.RoutingKey
 	s["severity"] = a.PagerDutyAction.Severity
 	return []tfMap{s}
 }
 
-func slackFromNotifier(a *humio.Action) []tfMap {
+func slackFromAction(a *humio.Action) []tfMap {
 	s := tfMap{}
 	fields := make(map[string]string)
 	for _, field := range a.SlackAction.Fields {
@@ -553,7 +553,7 @@ func slackFromNotifier(a *humio.Action) []tfMap {
 	return []tfMap{s}
 }
 
-func slackpostmessageFromNotifier(a *humio.Action) []tfMap {
+func slackpostmessageFromAction(a *humio.Action) []tfMap {
 	s := tfMap{}
 	fields := make(map[string]string)
 	for _, field := range a.SlackPostMessageAction.Fields {
@@ -566,14 +566,14 @@ func slackpostmessageFromNotifier(a *humio.Action) []tfMap {
 	return []tfMap{s}
 }
 
-func victoropsFromNotifier(a *humio.Action) []tfMap {
+func victoropsFromAction(a *humio.Action) []tfMap {
 	s := tfMap{}
 	s["message_type"] = a.VictorOpsAction.MessageType
 	s["notify_url"] = a.VictorOpsAction.NotifyUrl
 	return []tfMap{s}
 }
 
-func webhookFromNotifier(a *humio.Action) []tfMap {
+func webhookFromAction(a *humio.Action) []tfMap {
 	s := tfMap{}
 	s["body_template"] = a.WebhookAction.BodyTemplate
 	s["headers"] = a.WebhookAction.Headers

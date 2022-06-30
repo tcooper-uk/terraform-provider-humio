@@ -1,4 +1,4 @@
-resource "humio_notifier" "example_slackpostmessage" {
+resource "humio_action" "example_slackpostmessage" {
   repository = "humio"
   name       = "example_slackpostmessage"
   type     = "SlackPostMessageAction"

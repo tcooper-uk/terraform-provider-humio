@@ -49,7 +49,7 @@ func TestAccAlertInvalidInputs(t *testing.T) {
 		{Config: config, ExpectError: regexp.MustCompile(`Inappropriate value for attribute "description"`)},
 		{Config: config, ExpectError: regexp.MustCompile(`Inappropriate value for attribute "silenced"`)},
 		{Config: config, ExpectError: regexp.MustCompile(`Inappropriate value for attribute "labels"`)},
-		{Config: config, ExpectError: regexp.MustCompile(`Inappropriate value for attribute "notifiers"`)},
+		{Config: config, ExpectError: regexp.MustCompile(`Inappropriate value for attribute "actions"`)},
 	}, nil)
 }
 
@@ -65,7 +65,7 @@ func TestAccAlertBasic(t *testing.T) {
 				resource.TestCheckResourceAttr("humio_alert.test", "query", "loglevel=ERROR"),
 				resource.TestCheckResourceAttr("humio_alert.test", "description", ""),
 				resource.TestCheckResourceAttr("humio_alert.test", "silenced", "false"),
-				resource.TestCheckNoResourceAttr("humio_alert.test", "notifiers"),
+				resource.TestCheckNoResourceAttr("humio_alert.test", "actions"),
 				resource.TestCheckNoResourceAttr("humio_alert.test", "labels"),
 			),
 		},
@@ -85,7 +85,7 @@ func TestAccAlertBasicToFull(t *testing.T) {
 				resource.TestCheckResourceAttr("humio_alert.test", "description", ""),
 				resource.TestCheckResourceAttr("humio_alert.test", "silenced", "false"),
 				resource.TestCheckNoResourceAttr("humio_alert.test", "labels"),
-				resource.TestCheckNoResourceAttr("humio_alert.test", "notifiers"),
+				resource.TestCheckNoResourceAttr("humio_alert.test", "actions"),
 			),
 		},
 		{
@@ -101,8 +101,8 @@ func TestAccAlertBasicToFull(t *testing.T) {
 				resource.TestCheckResourceAttr("humio_alert.test", "labels.#", "2"),
 				resource.TestCheckResourceAttr("humio_alert.test", "labels.0", "errors"),
 				resource.TestCheckResourceAttr("humio_alert.test", "labels.1", "important"),
-				resource.TestCheckResourceAttr("humio_alert.test", "notifiers.#", "1"),
-				resource.TestCheckResourceAttrSet("humio_alert.test", "notifiers.0"),
+				resource.TestCheckResourceAttr("humio_alert.test", "actions.#", "1"),
+				resource.TestCheckResourceAttrSet("humio_alert.test", "actions.0"),
 			),
 			PlanOnly:           true,
 			ExpectNonEmptyPlan: true,
@@ -120,8 +120,8 @@ func TestAccAlertBasicToFull(t *testing.T) {
 				resource.TestCheckResourceAttr("humio_alert.test", "labels.#", "2"),
 				resource.TestCheckResourceAttr("humio_alert.test", "labels.0", "errors"),
 				resource.TestCheckResourceAttr("humio_alert.test", "labels.1", "important"),
-				resource.TestCheckResourceAttr("humio_alert.test", "notifiers.#", "1"),
-				resource.TestCheckResourceAttrSet("humio_alert.test", "notifiers.0"),
+				resource.TestCheckResourceAttr("humio_alert.test", "actions.#", "1"),
+				resource.TestCheckResourceAttrSet("humio_alert.test", "actions.0"),
 			),
 		},
 	}, testAccCheckAlertDestroy)
@@ -142,8 +142,8 @@ func TestAccAlertFull(t *testing.T) {
 				resource.TestCheckResourceAttr("humio_alert.test", "labels.#", "2"),
 				resource.TestCheckResourceAttr("humio_alert.test", "labels.0", "errors"),
 				resource.TestCheckResourceAttr("humio_alert.test", "labels.1", "important"),
-				resource.TestCheckResourceAttr("humio_alert.test", "notifiers.#", "1"),
-				resource.TestCheckResourceAttrSet("humio_alert.test", "notifiers.0"),
+				resource.TestCheckResourceAttr("humio_alert.test", "actions.#", "1"),
+				resource.TestCheckResourceAttrSet("humio_alert.test", "actions.0"),
 			),
 		},
 	}, testAccCheckAlertDestroy)
@@ -181,7 +181,7 @@ resource "humio_alert" "test" {
 	description          = ["invalid"]
 	silenced             = "invalid"
 	labels               = "invalid"
-	notifiers            = "invalid"
+	actions            = "invalid"
 }
 `
 
@@ -196,10 +196,10 @@ resource "humio_alert" "test" {
 `
 
 const alertFull = `
-resource "humio_notifier" "test" {
+resource "humio_action" "test" {
     repository = "sandbox"
     type     = "SlackAction"
-    name       = "notifier-slack-test"
+    name       = "action-slack-test"
     slack {
         fields = {
             "Events String" = "{events_str}"
@@ -219,7 +219,7 @@ resource "humio_alert" "test" {
 	description          = "some text"
 	silenced             = true
 	labels               = ["errors","important"]
-	notifiers            = [humio_notifier.test.notifier_id]
+	actions            = [humio_action.test.action_id]
 }
 `
 
@@ -235,7 +235,7 @@ var wantAlert = humio.Alert{
 	Description:        "errors occurred",
 	ThrottleTimeMillis: 3600000,
 	Silenced:           false,
-	Notifiers:          []string{"notifier1", "notifier2"},
+	Actions:          []string{"action1", "action2"},
 	Labels:             []string{"important", "error"},
 }
 

@@ -1,4 +1,4 @@
-resource "humio_notifier" "example_slack" {
+resource "humio_action" "example_slack" {
   repository = "humio"
   name       = "example_slack"
   type     = "SlackAction"

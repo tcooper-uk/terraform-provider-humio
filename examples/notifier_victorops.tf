@@ -1,4 +1,4 @@
-resource "humio_notifier" "example_victorops" {
+resource "humio_action" "example_victorops" {
   repository = "humio"
   name       = "example_victorops"
   type     = "VictorOpsAction"
