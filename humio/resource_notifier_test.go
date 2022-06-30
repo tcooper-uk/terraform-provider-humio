@@ -37,7 +37,7 @@ func TestAccNotifierRequiredFields(t *testing.T) {
 		},
 		{
 			Config:      config,
-			ExpectError: regexp.MustCompile(`The argument "entity" is required, but no definition was found.`),
+			ExpectError: regexp.MustCompile(`The argument "type" is required, but no definition was found.`),
 		},
 		{
 			Config:      config,
@@ -50,7 +50,7 @@ func TestAccNotifierInvalidInputs(t *testing.T) {
 	config := notifierInvalidInputs
 	accTestCase(t, []resource.TestStep{
 		{Config: config, ExpectError: regexp.MustCompile(`Inappropriate value for attribute "repository"`)},
-		{Config: config, ExpectError: regexp.MustCompile(`Inappropriate value for attribute "entity"`)},
+		{Config: config, ExpectError: regexp.MustCompile(`Inappropriate value for attribute "type"`)},
 		{Config: config, ExpectError: regexp.MustCompile(`Inappropriate value for attribute "name"`)},
 		{Config: config, ExpectError: regexp.MustCompile(`An argument named "email" is not expected here`)},
 		{Config: config, ExpectError: regexp.MustCompile(`An argument named "humiorepo" is not expected here`)},
@@ -138,7 +138,7 @@ func TestAccNotifierEmailBasic(t *testing.T) {
 			Check: resource.ComposeTestCheckFunc(
 				resource.TestCheckResourceAttrSet("humio_notifier.test", "notifier_id"),
 				resource.TestCheckResourceAttr("humio_notifier.test", "repository", "sandbox"),
-				resource.TestCheckResourceAttr("humio_notifier.test", "entity", "EmailNotifier"),
+				resource.TestCheckResourceAttr("humio_notifier.test", "type", "EmailAction"),
 				resource.TestCheckResourceAttr("humio_notifier.test", "name", "notifier-email-test"),
 				resource.TestCheckResourceAttr("humio_notifier.test", "email.#", "1"),
 				resource.TestCheckResourceAttr("humio_notifier.test", "email.0.recipients.#", "1"),
@@ -165,7 +165,7 @@ func TestAccNotifierEmailBasicToFull(t *testing.T) {
 			Check: resource.ComposeTestCheckFunc(
 				resource.TestCheckResourceAttrSet("humio_notifier.test", "notifier_id"),
 				resource.TestCheckResourceAttr("humio_notifier.test", "repository", "sandbox"),
-				resource.TestCheckResourceAttr("humio_notifier.test", "entity", "EmailNotifier"),
+				resource.TestCheckResourceAttr("humio_notifier.test", "type", "EmailAction"),
 				resource.TestCheckResourceAttr("humio_notifier.test", "name", "notifier-email-test"),
 				resource.TestCheckResourceAttr("humio_notifier.test", "email.#", "1"),
 				resource.TestCheckResourceAttr("humio_notifier.test", "email.0.recipients.#", "1"),
@@ -187,7 +187,7 @@ func TestAccNotifierEmailBasicToFull(t *testing.T) {
 			Check: resource.ComposeTestCheckFunc(
 				resource.TestCheckResourceAttrSet("humio_notifier.test", "notifier_id"),
 				resource.TestCheckResourceAttr("humio_notifier.test", "repository", "sandbox"),
-				resource.TestCheckResourceAttr("humio_notifier.test", "entity", "EmailNotifier"),
+				resource.TestCheckResourceAttr("humio_notifier.test", "type", "EmailAction"),
 				resource.TestCheckResourceAttr("humio_notifier.test", "name", "notifier-email-test"),
 				resource.TestCheckResourceAttr("humio_notifier.test", "email.#", "1"),
 				resource.TestCheckResourceAttr("humio_notifier.test", "email.0.recipients.#", "2"),
@@ -212,7 +212,7 @@ func TestAccNotifierEmailBasicToFull(t *testing.T) {
 			Check: resource.ComposeTestCheckFunc(
 				resource.TestCheckResourceAttrSet("humio_notifier.test", "notifier_id"),
 				resource.TestCheckResourceAttr("humio_notifier.test", "repository", "sandbox"),
-				resource.TestCheckResourceAttr("humio_notifier.test", "entity", "EmailNotifier"),
+				resource.TestCheckResourceAttr("humio_notifier.test", "type", "EmailAction"),
 				resource.TestCheckResourceAttr("humio_notifier.test", "name", "notifier-email-test"),
 				resource.TestCheckResourceAttr("humio_notifier.test", "email.#", "1"),
 				resource.TestCheckResourceAttr("humio_notifier.test", "email.0.recipients.#", "2"),
@@ -240,7 +240,7 @@ func TestAccNotifierEmailFull(t *testing.T) {
 			Check: resource.ComposeTestCheckFunc(
 				resource.TestCheckResourceAttrSet("humio_notifier.test", "notifier_id"),
 				resource.TestCheckResourceAttr("humio_notifier.test", "repository", "sandbox"),
-				resource.TestCheckResourceAttr("humio_notifier.test", "entity", "EmailNotifier"),
+				resource.TestCheckResourceAttr("humio_notifier.test", "type", "EmailAction"),
 				resource.TestCheckResourceAttr("humio_notifier.test", "name", "notifier-email-test"),
 				resource.TestCheckResourceAttr("humio_notifier.test", "email.#", "1"),
 				resource.TestCheckResourceAttr("humio_notifier.test", "email.0.recipients.#", "2"),
@@ -268,7 +268,7 @@ func TestAccNotifierHumioRepoFull(t *testing.T) {
 			Check: resource.ComposeTestCheckFunc(
 				resource.TestCheckResourceAttrSet("humio_notifier.test", "notifier_id"),
 				resource.TestCheckResourceAttr("humio_notifier.test", "repository", "sandbox"),
-				resource.TestCheckResourceAttr("humio_notifier.test", "entity", "HumioRepoNotifier"),
+				resource.TestCheckResourceAttr("humio_notifier.test", "type", "HumioRepoAction"),
 				resource.TestCheckResourceAttr("humio_notifier.test", "name", "notifier-humiorepo-test"),
 				resource.TestCheckResourceAttr("humio_notifier.test", "humiorepo.#", "1"),
 				resource.TestCheckResourceAttr("humio_notifier.test", "humiorepo.0.ingest_token", "secrettoken"),
@@ -292,7 +292,7 @@ func TestAccNotifierOpsGenieBasic(t *testing.T) {
 			Check: resource.ComposeTestCheckFunc(
 				resource.TestCheckResourceAttrSet("humio_notifier.test", "notifier_id"),
 				resource.TestCheckResourceAttr("humio_notifier.test", "repository", "sandbox"),
-				resource.TestCheckResourceAttr("humio_notifier.test", "entity", "OpsGenieNotifier"),
+				resource.TestCheckResourceAttr("humio_notifier.test", "type", "OpsGenieAction"),
 				resource.TestCheckResourceAttr("humio_notifier.test", "name", "notifier-opsgenie-test"),
 				resource.TestCheckResourceAttr("humio_notifier.test", "opsgenie.#", "1"),
 				resource.TestCheckResourceAttr("humio_notifier.test", "opsgenie.0.api_url", "https://api.opsgenie.com"),
@@ -317,7 +317,7 @@ func TestAccNotifierOpsGenieBasicToFull(t *testing.T) {
 			Check: resource.ComposeTestCheckFunc(
 				resource.TestCheckResourceAttrSet("humio_notifier.test", "notifier_id"),
 				resource.TestCheckResourceAttr("humio_notifier.test", "repository", "sandbox"),
-				resource.TestCheckResourceAttr("humio_notifier.test", "entity", "OpsGenieNotifier"),
+				resource.TestCheckResourceAttr("humio_notifier.test", "type", "OpsGenieAction"),
 				resource.TestCheckResourceAttr("humio_notifier.test", "name", "notifier-opsgenie-test"),
 				resource.TestCheckResourceAttr("humio_notifier.test", "opsgenie.#", "1"),
 				resource.TestCheckResourceAttr("humio_notifier.test", "opsgenie.0.api_url", "https://api.opsgenie.com"),
@@ -337,7 +337,7 @@ func TestAccNotifierOpsGenieBasicToFull(t *testing.T) {
 			Check: resource.ComposeTestCheckFunc(
 				resource.TestCheckResourceAttrSet("humio_notifier.test", "notifier_id"),
 				resource.TestCheckResourceAttr("humio_notifier.test", "repository", "sandbox"),
-				resource.TestCheckResourceAttr("humio_notifier.test", "entity", "OpsGenieNotifier"),
+				resource.TestCheckResourceAttr("humio_notifier.test", "type", "OpsGenieAction"),
 				resource.TestCheckResourceAttr("humio_notifier.test", "name", "notifier-opsgenie-test"),
 				resource.TestCheckResourceAttr("humio_notifier.test", "opsgenie.#", "1"),
 				resource.TestCheckResourceAttr("humio_notifier.test", "opsgenie.0.api_url", "https://127.0.0.1/iasjdojaoijdioajd"),
@@ -359,7 +359,7 @@ func TestAccNotifierOpsGenieBasicToFull(t *testing.T) {
 			Check: resource.ComposeTestCheckFunc(
 				resource.TestCheckResourceAttrSet("humio_notifier.test", "notifier_id"),
 				resource.TestCheckResourceAttr("humio_notifier.test", "repository", "sandbox"),
-				resource.TestCheckResourceAttr("humio_notifier.test", "entity", "OpsGenieNotifier"),
+				resource.TestCheckResourceAttr("humio_notifier.test", "type", "OpsGenieAction"),
 				resource.TestCheckResourceAttr("humio_notifier.test", "name", "notifier-opsgenie-test"),
 				resource.TestCheckResourceAttr("humio_notifier.test", "opsgenie.#", "1"),
 				resource.TestCheckResourceAttr("humio_notifier.test", "opsgenie.0.api_url", "https://127.0.0.1/iasjdojaoijdioajd"),
@@ -384,7 +384,7 @@ func TestAccNotifierOpsGenieFull(t *testing.T) {
 			Check: resource.ComposeTestCheckFunc(
 				resource.TestCheckResourceAttrSet("humio_notifier.test", "notifier_id"),
 				resource.TestCheckResourceAttr("humio_notifier.test", "repository", "sandbox"),
-				resource.TestCheckResourceAttr("humio_notifier.test", "entity", "OpsGenieNotifier"),
+				resource.TestCheckResourceAttr("humio_notifier.test", "type", "OpsGenieAction"),
 				resource.TestCheckResourceAttr("humio_notifier.test", "name", "notifier-opsgenie-test"),
 				resource.TestCheckResourceAttr("humio_notifier.test", "opsgenie.#", "1"),
 				resource.TestCheckResourceAttr("humio_notifier.test", "opsgenie.0.api_url", "https://127.0.0.1/iasjdojaoijdioajd"),
@@ -409,7 +409,7 @@ func TestAccNotifierPagerDutyFull(t *testing.T) {
 			Check: resource.ComposeTestCheckFunc(
 				resource.TestCheckResourceAttrSet("humio_notifier.test", "notifier_id"),
 				resource.TestCheckResourceAttr("humio_notifier.test", "repository", "sandbox"),
-				resource.TestCheckResourceAttr("humio_notifier.test", "entity", "PagerDutyNotifier"),
+				resource.TestCheckResourceAttr("humio_notifier.test", "type", "PagerDutyAction"),
 				resource.TestCheckResourceAttr("humio_notifier.test", "name", "notifier-pagerduty-test"),
 				resource.TestCheckResourceAttr("humio_notifier.test", "pagerduty.#", "1"),
 				resource.TestCheckResourceAttr("humio_notifier.test", "pagerduty.0.routing_key", "secretroutingkey"),
@@ -434,7 +434,7 @@ func TestAccNotifierSlackBasic(t *testing.T) {
 			Check: resource.ComposeTestCheckFunc(
 				resource.TestCheckResourceAttrSet("humio_notifier.test", "notifier_id"),
 				resource.TestCheckResourceAttr("humio_notifier.test", "repository", "sandbox"),
-				resource.TestCheckResourceAttr("humio_notifier.test", "entity", "SlackNotifier"),
+				resource.TestCheckResourceAttr("humio_notifier.test", "type", "SlackAction"),
 				resource.TestCheckResourceAttr("humio_notifier.test", "name", "notifier-slack-test"),
 				resource.TestCheckResourceAttr("humio_notifier.test", "slack.#", "1"),
 				resource.TestCheckResourceAttr("humio_notifier.test", "slack.0.fields.%", "3"),
@@ -462,7 +462,7 @@ func TestAccNotifierSlackBasicToFull(t *testing.T) {
 			Check: resource.ComposeTestCheckFunc(
 				resource.TestCheckResourceAttrSet("humio_notifier.test", "notifier_id"),
 				resource.TestCheckResourceAttr("humio_notifier.test", "repository", "sandbox"),
-				resource.TestCheckResourceAttr("humio_notifier.test", "entity", "SlackNotifier"),
+				resource.TestCheckResourceAttr("humio_notifier.test", "type", "SlackAction"),
 				resource.TestCheckResourceAttr("humio_notifier.test", "name", "notifier-slack-test"),
 				resource.TestCheckResourceAttr("humio_notifier.test", "slack.#", "1"),
 				resource.TestCheckResourceAttr("humio_notifier.test", "slack.0.fields.%", "3"),
@@ -485,7 +485,7 @@ func TestAccNotifierSlackBasicToFull(t *testing.T) {
 			Check: resource.ComposeTestCheckFunc(
 				resource.TestCheckResourceAttrSet("humio_notifier.test", "notifier_id"),
 				resource.TestCheckResourceAttr("humio_notifier.test", "repository", "sandbox"),
-				resource.TestCheckResourceAttr("humio_notifier.test", "entity", "SlackNotifier"),
+				resource.TestCheckResourceAttr("humio_notifier.test", "type", "SlackAction"),
 				resource.TestCheckResourceAttr("humio_notifier.test", "name", "notifier-slack-test"),
 				resource.TestCheckResourceAttr("humio_notifier.test", "slack.#", "1"),
 				resource.TestCheckResourceAttr("humio_notifier.test", "slack.0.fields.%", "2"),
@@ -509,7 +509,7 @@ func TestAccNotifierSlackBasicToFull(t *testing.T) {
 			Check: resource.ComposeTestCheckFunc(
 				resource.TestCheckResourceAttrSet("humio_notifier.test", "notifier_id"),
 				resource.TestCheckResourceAttr("humio_notifier.test", "repository", "sandbox"),
-				resource.TestCheckResourceAttr("humio_notifier.test", "entity", "SlackNotifier"),
+				resource.TestCheckResourceAttr("humio_notifier.test", "type", "SlackAction"),
 				resource.TestCheckResourceAttr("humio_notifier.test", "name", "notifier-slack-test"),
 				resource.TestCheckResourceAttr("humio_notifier.test", "slack.#", "1"),
 				resource.TestCheckResourceAttr("humio_notifier.test", "slack.0.fields.%", "2"),
@@ -536,7 +536,7 @@ func TestAccNotifierSlackFull(t *testing.T) {
 			Check: resource.ComposeTestCheckFunc(
 				resource.TestCheckResourceAttrSet("humio_notifier.test", "notifier_id"),
 				resource.TestCheckResourceAttr("humio_notifier.test", "repository", "sandbox"),
-				resource.TestCheckResourceAttr("humio_notifier.test", "entity", "SlackNotifier"),
+				resource.TestCheckResourceAttr("humio_notifier.test", "type", "SlackAction"),
 				resource.TestCheckResourceAttr("humio_notifier.test", "name", "notifier-slack-test"),
 				resource.TestCheckResourceAttr("humio_notifier.test", "slack.#", "1"),
 				resource.TestCheckResourceAttr("humio_notifier.test", "slack.0.fields.%", "2"),
@@ -563,7 +563,7 @@ func TestAccNotifierSlackPostMessageBasic(t *testing.T) {
 			Check: resource.ComposeTestCheckFunc(
 				resource.TestCheckResourceAttrSet("humio_notifier.test", "notifier_id"),
 				resource.TestCheckResourceAttr("humio_notifier.test", "repository", "sandbox"),
-				resource.TestCheckResourceAttr("humio_notifier.test", "entity", "SlackPostMessageNotifier"),
+				resource.TestCheckResourceAttr("humio_notifier.test", "type", "SlackPostMessageAction"),
 				resource.TestCheckResourceAttr("humio_notifier.test", "name", "notifier-slackpostmessage-test"),
 				resource.TestCheckResourceAttr("humio_notifier.test", "slackpostmessage.#", "1"),
 				resource.TestCheckResourceAttr("humio_notifier.test", "slackpostmessage.0.api_token", "secretapitoken"),
@@ -595,7 +595,7 @@ func TestAccNotifierSlackPostMessageBasicToFull(t *testing.T) {
 			Check: resource.ComposeTestCheckFunc(
 				resource.TestCheckResourceAttrSet("humio_notifier.test", "notifier_id"),
 				resource.TestCheckResourceAttr("humio_notifier.test", "repository", "sandbox"),
-				resource.TestCheckResourceAttr("humio_notifier.test", "entity", "SlackPostMessageNotifier"),
+				resource.TestCheckResourceAttr("humio_notifier.test", "type", "SlackPostMessageAction"),
 				resource.TestCheckResourceAttr("humio_notifier.test", "name", "notifier-slackpostmessage-test"),
 				resource.TestCheckResourceAttr("humio_notifier.test", "slackpostmessage.#", "1"),
 				resource.TestCheckResourceAttr("humio_notifier.test", "slackpostmessage.0.api_token", "secretapitoken"),
@@ -622,7 +622,7 @@ func TestAccNotifierSlackPostMessageBasicToFull(t *testing.T) {
 			Check: resource.ComposeTestCheckFunc(
 				resource.TestCheckResourceAttrSet("humio_notifier.test", "notifier_id"),
 				resource.TestCheckResourceAttr("humio_notifier.test", "repository", "sandbox"),
-				resource.TestCheckResourceAttr("humio_notifier.test", "entity", "SlackPostMessageNotifier"),
+				resource.TestCheckResourceAttr("humio_notifier.test", "type", "SlackPostMessageAction"),
 				resource.TestCheckResourceAttr("humio_notifier.test", "name", "notifier-slackpostmessage-test"),
 				resource.TestCheckResourceAttr("humio_notifier.test", "slackpostmessage.#", "1"),
 				resource.TestCheckResourceAttr("humio_notifier.test", "slackpostmessage.0.api_token", "secretapitoken"),
@@ -650,7 +650,7 @@ func TestAccNotifierSlackPostMessageBasicToFull(t *testing.T) {
 			Check: resource.ComposeTestCheckFunc(
 				resource.TestCheckResourceAttrSet("humio_notifier.test", "notifier_id"),
 				resource.TestCheckResourceAttr("humio_notifier.test", "repository", "sandbox"),
-				resource.TestCheckResourceAttr("humio_notifier.test", "entity", "SlackPostMessageNotifier"),
+				resource.TestCheckResourceAttr("humio_notifier.test", "type", "SlackPostMessageAction"),
 				resource.TestCheckResourceAttr("humio_notifier.test", "name", "notifier-slackpostmessage-test"),
 				resource.TestCheckResourceAttr("humio_notifier.test", "slackpostmessage.#", "1"),
 				resource.TestCheckResourceAttr("humio_notifier.test", "slackpostmessage.0.api_token", "secretapitoken"),
@@ -681,7 +681,7 @@ func TestAccNotifierSlackPostMessageFull(t *testing.T) {
 			Check: resource.ComposeTestCheckFunc(
 				resource.TestCheckResourceAttrSet("humio_notifier.test", "notifier_id"),
 				resource.TestCheckResourceAttr("humio_notifier.test", "repository", "sandbox"),
-				resource.TestCheckResourceAttr("humio_notifier.test", "entity", "SlackPostMessageNotifier"),
+				resource.TestCheckResourceAttr("humio_notifier.test", "type", "SlackPostMessageAction"),
 				resource.TestCheckResourceAttr("humio_notifier.test", "name", "notifier-slackpostmessage-test"),
 				resource.TestCheckResourceAttr("humio_notifier.test", "slackpostmessage.#", "1"),
 				resource.TestCheckResourceAttr("humio_notifier.test", "slackpostmessage.0.api_token", "secretapitoken"),
@@ -712,7 +712,7 @@ func TestAccNotifierVictorOpsFull(t *testing.T) {
 			Check: resource.ComposeTestCheckFunc(
 				resource.TestCheckResourceAttrSet("humio_notifier.test", "notifier_id"),
 				resource.TestCheckResourceAttr("humio_notifier.test", "repository", "sandbox"),
-				resource.TestCheckResourceAttr("humio_notifier.test", "entity", "VictorOpsNotifier"),
+				resource.TestCheckResourceAttr("humio_notifier.test", "type", "VictorOpsAction"),
 				resource.TestCheckResourceAttr("humio_notifier.test", "name", "notifier-victorops-test"),
 				resource.TestCheckResourceAttr("humio_notifier.test", "victorops.#", "1"),
 				resource.TestCheckResourceAttr("humio_notifier.test", "victorops.0.message_type", "important"),
@@ -737,7 +737,7 @@ func TestAccNotifierWebHookBasic(t *testing.T) {
 			Check: resource.ComposeTestCheckFunc(
 				resource.TestCheckResourceAttrSet("humio_notifier.test", "notifier_id"),
 				resource.TestCheckResourceAttr("humio_notifier.test", "repository", "sandbox"),
-				resource.TestCheckResourceAttr("humio_notifier.test", "entity", "WebHookNotifier"),
+				resource.TestCheckResourceAttr("humio_notifier.test", "type", "WebHookAction"),
 				resource.TestCheckResourceAttr("humio_notifier.test", "name", "notifier-webhook-test"),
 				resource.TestCheckResourceAttr("humio_notifier.test", "webhook.#", "1"),
 				resource.TestCheckResourceAttr("humio_notifier.test", "webhook.0.body_template", "{\n  \"repository\": \"{repo_name}\",\n  \"timestamp\": \"{alert_triggered_timestamp}\",\n  \"alert\": {\n    \"name\": \"{alert_name}\",\n    \"description\": \"{alert_description}\",\n    \"query\": {\n      \"queryString\": \"{query_string} \",\n      \"end\": \"{query_time_end}\",\n      \"start\": \"{query_time_start}\"\n    },\n    \"notifierID\": \"{alert_notifier_id}\",\n    \"id\": \"{alert_id}\"\n  },\n  \"warnings\": \"{warnings}\",\n  \"events\": {events},\n  \"numberOfEvents\": {event_count}\n  }"),
@@ -765,7 +765,7 @@ func TestAccNotifierWebHookBasicToFull(t *testing.T) {
 			Check: resource.ComposeTestCheckFunc(
 				resource.TestCheckResourceAttrSet("humio_notifier.test", "notifier_id"),
 				resource.TestCheckResourceAttr("humio_notifier.test", "repository", "sandbox"),
-				resource.TestCheckResourceAttr("humio_notifier.test", "entity", "WebHookNotifier"),
+				resource.TestCheckResourceAttr("humio_notifier.test", "type", "WebHookAction"),
 				resource.TestCheckResourceAttr("humio_notifier.test", "name", "notifier-webhook-test"),
 				resource.TestCheckResourceAttr("humio_notifier.test", "webhook.#", "1"),
 				resource.TestCheckResourceAttr("humio_notifier.test", "webhook.0.body_template", "{\n  \"repository\": \"{repo_name}\",\n  \"timestamp\": \"{alert_triggered_timestamp}\",\n  \"alert\": {\n    \"name\": \"{alert_name}\",\n    \"description\": \"{alert_description}\",\n    \"query\": {\n      \"queryString\": \"{query_string} \",\n      \"end\": \"{query_time_end}\",\n      \"start\": \"{query_time_start}\"\n    },\n    \"notifierID\": \"{alert_notifier_id}\",\n    \"id\": \"{alert_id}\"\n  },\n  \"warnings\": \"{warnings}\",\n  \"events\": {events},\n  \"numberOfEvents\": {event_count}\n  }"),
@@ -788,7 +788,7 @@ func TestAccNotifierWebHookBasicToFull(t *testing.T) {
 			Check: resource.ComposeTestCheckFunc(
 				resource.TestCheckResourceAttrSet("humio_notifier.test", "notifier_id"),
 				resource.TestCheckResourceAttr("humio_notifier.test", "repository", "sandbox"),
-				resource.TestCheckResourceAttr("humio_notifier.test", "entity", "WebHookNotifier"),
+				resource.TestCheckResourceAttr("humio_notifier.test", "type", "WebHookAction"),
 				resource.TestCheckResourceAttr("humio_notifier.test", "name", "notifier-webhook-test"),
 				resource.TestCheckResourceAttr("humio_notifier.test", "webhook.#", "1"),
 				resource.TestCheckResourceAttr("humio_notifier.test", "webhook.0.body_template", "custom body"),
@@ -814,7 +814,7 @@ func TestAccNotifierWebHookBasicToFull(t *testing.T) {
 			Check: resource.ComposeTestCheckFunc(
 				resource.TestCheckResourceAttrSet("humio_notifier.test", "notifier_id"),
 				resource.TestCheckResourceAttr("humio_notifier.test", "repository", "sandbox"),
-				resource.TestCheckResourceAttr("humio_notifier.test", "entity", "WebHookNotifier"),
+				resource.TestCheckResourceAttr("humio_notifier.test", "type", "WebHookAction"),
 				resource.TestCheckResourceAttr("humio_notifier.test", "name", "notifier-webhook-test"),
 				resource.TestCheckResourceAttr("humio_notifier.test", "webhook.#", "1"),
 				resource.TestCheckResourceAttr("humio_notifier.test", "webhook.0.body_template", "custom body"),
@@ -843,7 +843,7 @@ func TestAccNotifierWebHookFull(t *testing.T) {
 			Check: resource.ComposeTestCheckFunc(
 				resource.TestCheckResourceAttrSet("humio_notifier.test", "notifier_id"),
 				resource.TestCheckResourceAttr("humio_notifier.test", "repository", "sandbox"),
-				resource.TestCheckResourceAttr("humio_notifier.test", "entity", "WebHookNotifier"),
+				resource.TestCheckResourceAttr("humio_notifier.test", "type", "WebHookAction"),
 				resource.TestCheckResourceAttr("humio_notifier.test", "name", "notifier-webhook-test"),
 				resource.TestCheckResourceAttr("humio_notifier.test", "webhook.#", "1"),
 				resource.TestCheckResourceAttr("humio_notifier.test", "webhook.0.body_template", "custom body"),
@@ -875,7 +875,7 @@ func testAccCheckNotifierDestroy(s *terraform.State) error {
 
 		parts := parseRepositoryAndID(rs.Primary.ID)
 		resp, err := conn.Notifiers().Get(parts[0], parts[1])
-		emptyNotifier := humio.Notifier{}
+		emptyNotifier := humio.Action{}
 		if err == nil {
 			if !reflect.DeepEqual(*resp, emptyNotifier) {
 				return fmt.Errorf("notifier still exist for id %s: %#+v", rs.Primary.ID, *resp)
@@ -898,7 +898,7 @@ resource "humio_notifier" "test" {}
 const notifierInvalidInputs = `
 resource "humio_notifier" "test" {
     repository       = ["invalid"]
-    entity           = ["invalid"]
+    type             = ["invalid"]
     name             = ["invalid"]
     email            = "invalid"
     humiorepo        = "invalid"
@@ -914,7 +914,7 @@ resource "humio_notifier" "test" {
 const notifierInvalidEmailSettings = `
 resource "humio_notifier" "test" {
     repository = "sandbox"
-    entity     = "EmailNotifer"
+    type       = "EmailAction"
     name       = "notifier-invalid-email"
     email {
         body_template    = ["invalid"]
@@ -927,7 +927,7 @@ resource "humio_notifier" "test" {
 const notifierInvalidHumioRepoSettings = `
 resource "humio_notifier" "test" {
     repository = "sandbox"
-    entity     = "HumioRepoNotifer"
+    type       = "HumioRepoAction"
     name       = "notifier-invalid-humiorepo"
     humiorepo {
         ingest_token = ["invalid"]
@@ -938,7 +938,7 @@ resource "humio_notifier" "test" {
 const notifierInvalidOpsGenieSettings = `
 resource "humio_notifier" "test" {
     repository = "sandbox"
-    entity     = "OpsGenieNotifer"
+    type       = "OpsGenieAction"
     name       = "notifier-invalid-opsgenie"
     opsgenie {
         api_url   = ["invalid"]
@@ -950,7 +950,7 @@ resource "humio_notifier" "test" {
 const notifierInvalidPagerDutySettings = `
 resource "humio_notifier" "test" {
     repository = "sandbox"
-    entity     = "PagerDutyNotifer"
+    type       = "PagerDutyAction"
     name       = "notifier-invalid-pagerduty"
     pagerduty {
         routing_key = ["invalid"]
@@ -962,7 +962,7 @@ resource "humio_notifier" "test" {
 const notifierInvalidSlackSettings = `
 resource "humio_notifier" "test" {
     repository = "sandbox"
-    entity     = "SlackNotifer"
+    type       = "SlackAction"
     name       = "notifier-invalid-slack"
     slack {
         fields = "invalid"
@@ -974,7 +974,7 @@ resource "humio_notifier" "test" {
 const notifierInvalidSlackPostMessageSettings = `
 resource "humio_notifier" "test" {
     repository = "sandbox"
-    entity     = "SlackPostMessageNotifer"
+    type       = "SlackPostMessageAction"
     name       = "notifier-invalid-slackpostmessage"
     slackpostmessage {
         api_token = ["invalid"]
@@ -988,7 +988,7 @@ resource "humio_notifier" "test" {
 const notifierInvalidVictorOpsSettings = `
 resource "humio_notifier" "test" {
     repository = "sandbox"
-    entity     = "VictorOpsNotifer"
+    type       = "VictorOpsAction"
     name       = "notifier-invalid-victorops"
     victorops {
         message_type = ["invalid"]
@@ -1000,7 +1000,7 @@ resource "humio_notifier" "test" {
 const notifierInvalidWebHookSettings = `
 resource "humio_notifier" "test" {
     repository = "sandbox"
-    entity     = "WebHookNotifer"
+    type       = "WebHookAction"
     name       = "notifier-invalid-webhook"
     webhook {
         body_template = ["invalid"]
@@ -1014,7 +1014,7 @@ resource "humio_notifier" "test" {
 const notifierEmailBasic = `
 resource "humio_notifier" "test" {
     repository = "sandbox"
-    entity     = "EmailNotifier"
+    type       = "EmailAction"
     name       = "notifier-email-test"
     email {
         recipients = ["test@example.org"]
@@ -1025,7 +1025,7 @@ resource "humio_notifier" "test" {
 const notifierEmailFull = `
 resource "humio_notifier" "test" {
     repository  = "sandbox"
-    entity      = "EmailNotifier"
+    type        = "EmailAction"
     name        = "notifier-email-test"
     email {
         body_template    = "this is the body"
@@ -1038,7 +1038,7 @@ resource "humio_notifier" "test" {
 const notifierHumioRepoFull = `
 resource "humio_notifier" "test" {
     repository = "sandbox"
-    entity     = "HumioRepoNotifier"
+    type       = "HumioRepoAction"
     name       = "notifier-humiorepo-test"
     humiorepo {
         ingest_token = "secrettoken"
@@ -1049,7 +1049,7 @@ resource "humio_notifier" "test" {
 const notifierOpsGenieBasic = `
 resource "humio_notifier" "test" {
     repository = "sandbox"
-    entity     = "OpsGenieNotifier"
+    type       = "OpsGenieAction"
     name       = "notifier-opsgenie-test"
     opsgenie {
         genie_key = "secretgeniekey"
@@ -1060,7 +1060,7 @@ resource "humio_notifier" "test" {
 const notifierOpsGenieFull = `
 resource "humio_notifier" "test" {
     repository = "sandbox"
-    entity     = "OpsGenieNotifier"
+    type       = "OpsGenieAction"
     name       = "notifier-opsgenie-test"
     opsgenie {
         api_url   = "https://127.0.0.1/iasjdojaoijdioajd"
@@ -1072,7 +1072,7 @@ resource "humio_notifier" "test" {
 const notifierPagerDutyFull = `
 resource "humio_notifier" "test" {
     repository = "sandbox"
-    entity     = "PagerDutyNotifier"
+    type       = "PagerDutyAction"
     name       = "notifier-pagerduty-test"
     pagerduty {
         routing_key = "secretroutingkey"
@@ -1084,7 +1084,7 @@ resource "humio_notifier" "test" {
 const notifierSlackBasic = `
 resource "humio_notifier" "test" {
     repository = "sandbox"
-    entity     = "SlackNotifier"
+    type       = "SlackAction"
     name       = "notifier-slack-test"
     slack {
         fields = {
@@ -1100,7 +1100,7 @@ resource "humio_notifier" "test" {
 const notifierSlackFull = `
 resource "humio_notifier" "test" {
     repository = "sandbox"
-    entity     = "SlackNotifier"
+    type       = "SlackAction"
     name       = "notifier-slack-test"
     slack {
         fields = {
@@ -1115,7 +1115,7 @@ resource "humio_notifier" "test" {
 const notifierSlackPostMessageBasic = `
 resource "humio_notifier" "test" {
     repository = "sandbox"
-    entity     = "SlackPostMessageNotifier"
+    type       = "SlackPostMessageAction"
     name       = "notifier-slackpostmessage-test"
     slackpostmessage {
         api_token = "secretapitoken"
@@ -1132,7 +1132,7 @@ resource "humio_notifier" "test" {
 const notifierSlackPostMessageFull = `
 resource "humio_notifier" "test" {
     repository = "sandbox"
-    entity     = "SlackPostMessageNotifier"
+    type       = "SlackPostMessageAction"
     name       = "notifier-slackpostmessage-test"
     slackpostmessage {
         api_token = "secretapitoken"
@@ -1149,7 +1149,7 @@ resource "humio_notifier" "test" {
 const notifierVictorOpsFull = `
 resource "humio_notifier" "test" {
     repository = "sandbox"
-    entity     = "VictorOpsNotifier"
+    type       = "VictorOpsAction"
     name       = "notifier-victorops-test"
     victorops {
         message_type = "important"
@@ -1161,7 +1161,7 @@ resource "humio_notifier" "test" {
 const notifierWebHookBasic = `
 resource "humio_notifier" "test" {
     repository = "sandbox"
-    entity     = "WebHookNotifier"
+    type       = "WebHookAction"
     name       = "notifier-webhook-test"
     webhook {
         headers = {
@@ -1175,7 +1175,7 @@ resource "humio_notifier" "test" {
 const notifierWebHookFull = `
 resource "humio_notifier" "test" {
     repository = "sandbox"
-    entity     = "WebHookNotifier"
+    type       = "WebHookAction"
     name       = "notifier-webhook-test"
     webhook {
         body_template = "custom body"
@@ -1189,9 +1189,9 @@ resource "humio_notifier" "test" {
 }
 `
 
-var wantEmailNotifier = humio.Notifier{
+var wantEmailNotifier = humio.Action{
 	ID:     "",
-	Entity: "EmailNotifier",
+	Type: "EmailAction",
 	Name:   "test-notifier",
 	Properties: map[string]interface{}{
 		"recipients":      []interface{}{"test@example.org", "ops@example.org"},
@@ -1200,18 +1200,18 @@ var wantEmailNotifier = humio.Notifier{
 	},
 }
 
-var wantHumioRepoNotifier = humio.Notifier{
+var wantHumioRepoNotifier = humio.Action{
 	ID:     "",
-	Entity: "HumioRepoNotifier",
+	Type: "HumioRepoAction",
 	Name:   "test-notifier",
 	Properties: map[string]interface{}{
 		"ingestToken": "12345678901234567890123456789012",
 	},
 }
 
-var wantOpsGenieNotifier = humio.Notifier{
+var wantOpsGenieNotifier = humio.Action{
 	ID:     "",
-	Entity: "OpsGenieNotifier",
+	Type: "OpsGenieAction",
 	Name:   "test-notifier",
 	Properties: map[string]interface{}{
 		"apiUrl":   "https://example.org",
@@ -1219,9 +1219,9 @@ var wantOpsGenieNotifier = humio.Notifier{
 	},
 }
 
-var wantPagerDutyNotifier = humio.Notifier{
+var wantPagerDutyNotifier = humio.Action{
 	ID:     "",
-	Entity: "PagerDutyNotifier",
+	Type: "PagerDutyAction",
 	Name:   "test-notifier",
 	Properties: map[string]interface{}{
 		"routingKey": "12345678901234567890123456789012",
@@ -1229,9 +1229,9 @@ var wantPagerDutyNotifier = humio.Notifier{
 	},
 }
 
-var wantSlackNotifier = humio.Notifier{
+var wantSlackNotifier = humio.Action{
 	ID:     "",
-	Entity: "SlackNotifier",
+	Type: "SlackAction",
 	Name:   "test-notifier",
 	Properties: map[string]interface{}{
 		"url": "https://hooks.slack.com/services/XXXXXXXXX/YYYYYYYYY/ZZZZZZZZZZZZZZZZZZZZZZZZ",
@@ -1242,9 +1242,9 @@ var wantSlackNotifier = humio.Notifier{
 	},
 }
 
-var wantSlackPostMessageNotifier = humio.Notifier{
+var wantSlackPostMessageNotifier = humio.Action{
 	ID:     "",
-	Entity: "SlackPostMessageNotifier",
+	Type: "SlackPostMessageAction",
 	Name:   "test-notifier",
 	Properties: map[string]interface{}{
 		"apiToken": "12345678901234567890123456789012",
@@ -1257,9 +1257,9 @@ var wantSlackPostMessageNotifier = humio.Notifier{
 	},
 }
 
-var wantVictorOpsNotifier = humio.Notifier{
+var wantVictorOpsNotifier = humio.Action{
 	ID:     "",
-	Entity: "VictorOpsNotifier",
+	Type: "VictorOpsAction",
 	Name:   "test-notifier",
 	Properties: map[string]interface{}{
 		"messageType": "12345678901234567890123456789012",
@@ -1267,9 +1267,9 @@ var wantVictorOpsNotifier = humio.Notifier{
 	},
 }
 
-var wantWebHookNotifier = humio.Notifier{
+var wantWebHookNotifier = humio.Action{
 	ID:     "",
-	Entity: "WebHookNotifier",
+	Type: "WebHookAction",
 	Name:   "test-notifier",
 	Properties: map[string]interface{}{
 		"bodyTemplate": "12345678901234567890123456789012",

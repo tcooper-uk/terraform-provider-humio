@@ -1,7 +1,7 @@
 resource "humio_notifier" "example_email" {
   repository = "sandbox"
   name       = "example_email"
-  entity     = "EmailNotifier"
+  type     = "EmailAction"
 
   email {
     recipients = ["ops@example.com"]
@@ -11,7 +11,7 @@ resource "humio_notifier" "example_email" {
 resource "humio_notifier" "example_email_body" {
   repository = "humio"
   name       = "example_email_body"
-  entity     = "EmailNotifier"
+  type     = "EmailAction"
 
   email {
     recipients    = ["ops@example.com"]
@@ -22,7 +22,7 @@ resource "humio_notifier" "example_email_body" {
 resource "humio_notifier" "example_email_subject" {
   repository = "humio"
   name       = "example_email_subject"
-  entity     = "EmailNotifier"
+  type     = "EmailAction"
 
   email {
     recipients       = ["ops@example.com"]
@@ -33,7 +33,7 @@ resource "humio_notifier" "example_email_subject" {
 resource "humio_notifier" "example_email_body_subject" {
   repository = "humio"
   name       = "example_email_body_subject"
-  entity     = "EmailNotifier"
+  type     = "EmailAction"
 
   email {
     recipients       = ["ops@example.com"]

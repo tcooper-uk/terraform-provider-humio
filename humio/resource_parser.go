@@ -104,7 +104,7 @@ func resourceParserRead(_ context.Context, d *schema.ResourceData, client interf
 		d.Get("repository").(string),
 		d.Get("name").(string),
 	)
-	if err != nil || reflect.DeepEqual(*parser, humio.Parser{Tests: []humio.ParserTestCase{}}) {
+	if err != nil || reflect.DeepEqual(*parser, humio.Parser{Tests: []string{}}) {
 		return diag.Errorf("could not get parser: %s", err)
 	}
 	return resourceDataFromParser(parser, d)
@@ -125,7 +125,7 @@ func resourceDataFromParser(a *humio.Parser, d *schema.ResourceData) diag.Diagno
 	}
 	var tests []string
 	for _, test2 := range a.Tests {
-		tests = append(tests, test2.Input)
+		tests = append(tests, test2)
 	}
 	err = d.Set("test_data", tests)
 	if err != nil {
@@ -156,17 +156,8 @@ func parserFromResourceData(d *schema.ResourceData) (humio.Parser, error) {
 		Name:      d.Get("name").(string),
 		Script:    d.Get("parser_script").(string),
 		TagFields: convertInterfaceListToStringSlice(d.Get("tag_fields").([]interface{})),
-		Tests:     convertInterfaceListToParserTestCases(d.Get("test_data").([]interface{})),
+		Tests:     convertInterfaceListToStringSlice(d.Get("test_data").([]interface{})),
 	}, nil
-}
-
-func convertInterfaceListToParserTestCases(s []interface{}) []humio.ParserTestCase {
-	var element []humio.ParserTestCase
-	for _, item := range s {
-		value, _ := item.(string)
-		element = append(element, humio.ParserTestCase{Input: value})
-	}
-	return element
 }
 
 func resourceParserDelete(_ context.Context, d *schema.ResourceData, client interface{}) diag.Diagnostics {

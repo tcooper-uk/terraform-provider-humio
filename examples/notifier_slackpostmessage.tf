@@ -1,7 +1,7 @@
 resource "humio_notifier" "example_slackpostmessage" {
   repository = "humio"
   name       = "example_slackpostmessage"
-  entity     = "SlackPostMessageNotifier"
+  type     = "SlackPostMessageAction"
 
   slackpostmessage {
     api_key  = "abcdefghij1234567890"

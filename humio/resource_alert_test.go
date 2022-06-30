@@ -198,7 +198,7 @@ resource "humio_alert" "test" {
 const alertFull = `
 resource "humio_notifier" "test" {
     repository = "sandbox"
-    entity     = "SlackNotifier"
+    type     = "SlackAction"
     name       = "notifier-slack-test"
     slack {
         fields = {

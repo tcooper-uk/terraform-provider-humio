@@ -1,7 +1,7 @@
 resource "humio_notifier" "example_victorops" {
   repository = "humio"
   name       = "example_victorops"
-  entity     = "VictorOpsNotifier"
+  type     = "VictorOpsAction"
 
   victorops {
     message_type = "critical"
