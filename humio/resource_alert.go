@@ -35,6 +35,10 @@ func resourceAlert() *schema.Resource {
 		},
 
 		Schema: map[string]*schema.Schema{
+			"alert_id": {
+				Type:     schema.TypeString,
+				Computed: true,
+			},
 			"repository": {
 				Type:     schema.TypeString,
 				Required: true,
@@ -49,7 +53,7 @@ func resourceAlert() *schema.Resource {
 				Required: true,
 				ForceNew: true,
 			},
-			"silenced": {
+			"enabled": {
 				Type:     schema.TypeBool,
 				Optional: true,
 				Default:  false,
@@ -69,7 +73,7 @@ func resourceAlert() *schema.Resource {
 				Type:     schema.TypeString,
 				Required: true,
 			},
-			"notifiers": {
+			"actions": {
 				Type:     schema.TypeList,
 				Optional: true,
 				Elem:     &schema.Schema{Type: schema.TypeString},
@@ -92,7 +96,6 @@ func resourceAlertCreate(ctx context.Context, d *schema.ResourceData, client int
 	_, err = client.(*humio.Client).Alerts().Add(
 		d.Get("repository").(string),
 		&alert,
-		false,
 	)
 	if err != nil {
 		return diag.Errorf("could not create alert: %s", err)
@@ -131,7 +134,11 @@ func resourceAlertRead(_ context.Context, d *schema.ResourceData, client interfa
 }
 
 func resourceDataFromAlert(a *humio.Alert, d *schema.ResourceData) diag.Diagnostics {
-	err := d.Set("name", a.Name)
+	err := d.Set("alert_id", a.ID)
+	if err != nil {
+		return diag.Errorf("error setting alert_id for resource: %s, %s", d.Id(), err)
+	}
+	err = d.Set("name", a.Name)
 	if err != nil {
 		return diag.Errorf("error setting name for resource %s: %s", d.Id(), err)
 	}
@@ -143,23 +150,23 @@ func resourceDataFromAlert(a *humio.Alert, d *schema.ResourceData) diag.Diagnost
 	if err != nil {
 		return diag.Errorf("error setting throttle_time_millis for resource %s: %s", d.Id(), err)
 	}
-	err = d.Set("silenced", a.Silenced)
+	err = d.Set("enabled", a.Enabled)
 	if err != nil {
-		return diag.Errorf("error setting silenced for resource %s: %s", d.Id(), err)
+		return diag.Errorf("error setting enabled for resource %s: %s", d.Id(), err)
 	}
-	err = d.Set("notifiers", a.Notifiers)
+	err = d.Set("actions", a.Actions)
 	if err != nil {
-		return diag.Errorf("error setting notifiers for resource %s: %s", d.Id(), err)
+		return diag.Errorf("error setting actions for resource %s: %s", d.Id(), err)
 	}
 	err = d.Set("labels", a.Labels)
 	if err != nil {
 		return diag.Errorf("error setting labels for resource %s: %s", d.Id(), err)
 	}
-	err = d.Set("query", a.Query.QueryString)
+	err = d.Set("query", a.QueryString)
 	if err != nil {
 		return diag.Errorf("error setting query for resource %s: %s", d.Id(), err)
 	}
-	err = d.Set("start", a.Query.Start)
+	err = d.Set("start", a.QueryStart)
 	if err != nil {
 		return diag.Errorf("error setting start for resource %s: %s", d.Id(), err)
 	}
@@ -172,10 +179,9 @@ func resourceAlertUpdate(ctx context.Context, d *schema.ResourceData, client int
 		return diag.Errorf("could not obtain alert from resource data: %s", err)
 	}
 
-	_, err = client.(*humio.Client).Alerts().Add(
+	_, err = client.(*humio.Client).Alerts().Update(
 		d.Get("repository").(string),
 		&alert,
-		true,
 	)
 	if err != nil {
 		return diag.Errorf("could not update alert: %s", err)
@@ -202,18 +208,15 @@ func resourceAlertDelete(_ context.Context, d *schema.ResourceData, client inter
 
 func alertFromResourceData(d *schema.ResourceData) (humio.Alert, error) {
 	return humio.Alert{
+		ID:                 d.Get("alert_id").(string),
 		Name:               d.Get("name").(string),
 		Description:        d.Get("description").(string),
 		ThrottleTimeMillis: d.Get("throttle_time_millis").(int),
-		Silenced:           d.Get("silenced").(bool),
-		Notifiers:          convertInterfaceListToStringSlice(d.Get("notifiers").([]interface{})),
+		Enabled:            d.Get("enabled").(bool),
+		Actions:            convertInterfaceListToStringSlice(d.Get("actions").([]interface{})),
 		Labels:             convertInterfaceListToStringSlice(d.Get("labels").([]interface{})),
-		Query: humio.HumioQuery{
-			QueryString: d.Get("query").(string),
-			Start:       d.Get("start").(string),
-			End:         "now",
-			IsLive:      true,
-		},
+		QueryString:        d.Get("query").(string),
+		QueryStart:         d.Get("start").(string),
 	}, nil
 }
 

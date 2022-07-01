@@ -1,7 +1,7 @@
-resource "humio_notifier" "example_webhook" {
+resource "humio_action" "example_webhook" {
   repository = "humio"
   name       = "example_webhook"
-  entity     = "WebHookNotifier"
+  type     = "WebHookAction"
 
   webhook {
     method  = "POST"
@@ -21,7 +21,7 @@ resource "humio_notifier" "example_webhook" {
       "end": "{query_time_end}",
       "start": "{query_time_start}"
     },
-    "notifierID": "{alert_notifier_id}",
+    "actionID": "{alert_action_id}",
     "id": "{alert_id}"
   },
   "warnings": "{warnings}",

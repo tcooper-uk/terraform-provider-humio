@@ -1,7 +1,7 @@
-resource "humio_notifier" "example_opsgenie" {
+resource "humio_action" "example_opsgenie" {
   repository = "humio"
   name       = "example_opsgenie"
-  entity     = "OpsGenieNotifier"
+  type     = "OpsGenieAction"
 
   opsgenie {
     api_url   = "https://api.opsgenie.com"

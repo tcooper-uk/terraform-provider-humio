@@ -61,7 +61,7 @@ func Provider() *schema.Provider {
 		ResourcesMap: map[string]*schema.Resource{
 			"humio_alert":        resourceAlert(),
 			"humio_ingest_token": resourceIngestToken(),
-			"humio_notifier":     resourceNotifier(),
+			"humio_action":     resourceAction(),
 			"humio_parser":       resourceParser(),
 			"humio_repository":   resourceRepository(),
 		},
