@@ -1,6 +1,6 @@
 # Terraform provider for Humio
 
-**EXPERIMENTAL: It is still early days for this plugin and thus not ready for prime time yet.**
+**UNSUPPORTED AND EXPERIMENTAL: It is still early days for this plugin and thus not ready for prime time yet.**
 
 ## Currently tested with
 
