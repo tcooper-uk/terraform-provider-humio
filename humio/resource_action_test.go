@@ -737,7 +737,7 @@ func TestAccActionWebHookBasic(t *testing.T) {
 			Check: resource.ComposeTestCheckFunc(
 				resource.TestCheckResourceAttrSet("humio_action.test", "action_id"),
 				resource.TestCheckResourceAttr("humio_action.test", "repository", "sandbox"),
-				resource.TestCheckResourceAttr("humio_action.test", "type", "WebHookAction"),
+				resource.TestCheckResourceAttr("humio_action.test", "type", "WebhookAction"),
 				resource.TestCheckResourceAttr("humio_action.test", "name", "action-webhook-test"),
 				resource.TestCheckResourceAttr("humio_action.test", "webhook.#", "1"),
 				resource.TestCheckResourceAttr("humio_action.test", "webhook.0.body_template", "{\n  \"repository\": \"{repo_name}\",\n  \"timestamp\": \"{alert_triggered_timestamp}\",\n  \"alert\": {\n    \"name\": \"{alert_name}\",\n    \"description\": \"{alert_description}\",\n    \"query\": {\n      \"queryString\": \"{query_string} \",\n      \"end\": \"{query_time_end}\",\n      \"start\": \"{query_time_start}\"\n    },\n    \"actionID\": \"{alert_action_id}\",\n    \"id\": \"{alert_id}\"\n  },\n  \"warnings\": \"{warnings}\",\n  \"events\": {events},\n  \"numberOfEvents\": {event_count}\n  }"),
@@ -765,7 +765,7 @@ func TestAccActionWebHookBasicToFull(t *testing.T) {
 			Check: resource.ComposeTestCheckFunc(
 				resource.TestCheckResourceAttrSet("humio_action.test", "action_id"),
 				resource.TestCheckResourceAttr("humio_action.test", "repository", "sandbox"),
-				resource.TestCheckResourceAttr("humio_action.test", "type", "WebHookAction"),
+				resource.TestCheckResourceAttr("humio_action.test", "type", "WebhookAction"),
 				resource.TestCheckResourceAttr("humio_action.test", "name", "action-webhook-test"),
 				resource.TestCheckResourceAttr("humio_action.test", "webhook.#", "1"),
 				resource.TestCheckResourceAttr("humio_action.test", "webhook.0.body_template", "{\n  \"repository\": \"{repo_name}\",\n  \"timestamp\": \"{alert_triggered_timestamp}\",\n  \"alert\": {\n    \"name\": \"{alert_name}\",\n    \"description\": \"{alert_description}\",\n    \"query\": {\n      \"queryString\": \"{query_string} \",\n      \"end\": \"{query_time_end}\",\n      \"start\": \"{query_time_start}\"\n    },\n    \"actionID\": \"{alert_action_id}\",\n    \"id\": \"{alert_id}\"\n  },\n  \"warnings\": \"{warnings}\",\n  \"events\": {events},\n  \"numberOfEvents\": {event_count}\n  }"),
@@ -788,7 +788,7 @@ func TestAccActionWebHookBasicToFull(t *testing.T) {
 			Check: resource.ComposeTestCheckFunc(
 				resource.TestCheckResourceAttrSet("humio_action.test", "action_id"),
 				resource.TestCheckResourceAttr("humio_action.test", "repository", "sandbox"),
-				resource.TestCheckResourceAttr("humio_action.test", "type", "WebHookAction"),
+				resource.TestCheckResourceAttr("humio_action.test", "type", "WebhookAction"),
 				resource.TestCheckResourceAttr("humio_action.test", "name", "action-webhook-test"),
 				resource.TestCheckResourceAttr("humio_action.test", "webhook.#", "1"),
 				resource.TestCheckResourceAttr("humio_action.test", "webhook.0.body_template", "custom body"),
@@ -814,7 +814,7 @@ func TestAccActionWebHookBasicToFull(t *testing.T) {
 			Check: resource.ComposeTestCheckFunc(
 				resource.TestCheckResourceAttrSet("humio_action.test", "action_id"),
 				resource.TestCheckResourceAttr("humio_action.test", "repository", "sandbox"),
-				resource.TestCheckResourceAttr("humio_action.test", "type", "WebHookAction"),
+				resource.TestCheckResourceAttr("humio_action.test", "type", "WebhookAction"),
 				resource.TestCheckResourceAttr("humio_action.test", "name", "action-webhook-test"),
 				resource.TestCheckResourceAttr("humio_action.test", "webhook.#", "1"),
 				resource.TestCheckResourceAttr("humio_action.test", "webhook.0.body_template", "custom body"),
@@ -843,7 +843,7 @@ func TestAccActionWebHookFull(t *testing.T) {
 			Check: resource.ComposeTestCheckFunc(
 				resource.TestCheckResourceAttrSet("humio_action.test", "action_id"),
 				resource.TestCheckResourceAttr("humio_action.test", "repository", "sandbox"),
-				resource.TestCheckResourceAttr("humio_action.test", "type", "WebHookAction"),
+				resource.TestCheckResourceAttr("humio_action.test", "type", "WebhookAction"),
 				resource.TestCheckResourceAttr("humio_action.test", "name", "action-webhook-test"),
 				resource.TestCheckResourceAttr("humio_action.test", "webhook.#", "1"),
 				resource.TestCheckResourceAttr("humio_action.test", "webhook.0.body_template", "custom body"),
@@ -1000,7 +1000,7 @@ resource "humio_action" "test" {
 const actionInvalidWebHookSettings = `
 resource "humio_action" "test" {
     repository = "sandbox"
-    type       = "WebHookAction"
+    type       = "WebhookAction"
     name       = "action-invalid-webhook"
     webhook {
         body_template = ["invalid"]
@@ -1161,7 +1161,7 @@ resource "humio_action" "test" {
 const actionWebHookBasic = `
 resource "humio_action" "test" {
     repository = "sandbox"
-    type       = "WebHookAction"
+    type       = "WebhookAction"
     name       = "action-webhook-test"
     webhook {
         headers = {
@@ -1175,7 +1175,7 @@ resource "humio_action" "test" {
 const actionWebHookFull = `
 resource "humio_action" "test" {
     repository = "sandbox"
-    type       = "WebHookAction"
+    type       = "WebhookAction"
     name       = "action-webhook-test"
     webhook {
         body_template = "custom body"
@@ -1193,10 +1193,10 @@ var wantEmailAction = humio.Action{
 	ID:     "",
 	Type: "EmailAction",
 	Name:   "test-action",
-	Properties: map[string]interface{}{
-		"recipients":      []interface{}{"test@example.org", "ops@example.org"},
-		"bodyTemplate":    "this is the subject",
-		"subjectTemplate": "this is the body",
+	EmailAction: humio.EmailAction{
+		Recipients:      []string{"test@example.org", "ops@example.org"},
+		BodyTemplate:    "this is the subject",
+		SubjectTemplate: "this is the body",
 	},
 }
 
@@ -1204,8 +1204,8 @@ var wantHumioRepoAction = humio.Action{
 	ID:     "",
 	Type: "HumioRepoAction",
 	Name:   "test-action",
-	Properties: map[string]interface{}{
-		"ingestToken": "12345678901234567890123456789012",
+	HumioRepoAction: humio.HumioRepoAction{
+		IngestToken: "12345678901234567890123456789012",
 	},
 }
 
@@ -1213,9 +1213,9 @@ var wantOpsGenieAction = humio.Action{
 	ID:     "",
 	Type: "OpsGenieAction",
 	Name:   "test-action",
-	Properties: map[string]interface{}{
-		"apiUrl":   "https://example.org",
-		"genieKey": "12345678901234567890123456789012",
+	OpsGenieAction: humio.OpsGenieAction{
+		ApiUrl:   "https://example.org",
+		GenieKey: "12345678901234567890123456789012",
 	},
 }
 
@@ -1223,9 +1223,9 @@ var wantPagerDutyAction = humio.Action{
 	ID:     "",
 	Type: "PagerDutyAction",
 	Name:   "test-action",
-	Properties: map[string]interface{}{
-		"routingKey": "12345678901234567890123456789012",
-		"severity":   "critical",
+	PagerDutyAction: humio.PagerDutyAction{
+		RoutingKey: "12345678901234567890123456789012",
+		Severity:   "critical",
 	},
 }
 
@@ -1233,11 +1233,11 @@ var wantSlackAction = humio.Action{
 	ID:     "",
 	Type: "SlackAction",
 	Name:   "test-action",
-	Properties: map[string]interface{}{
-		"url": "https://hooks.slack.com/services/XXXXXXXXX/YYYYYYYYY/ZZZZZZZZZZZZZZZZZZZZZZZZ",
-		"fields": map[string]interface{}{
-			"Link":  "{url}",
-			"Query": "{query_string}",
+	SlackAction: humio.SlackAction{
+		Url: "https://hooks.slack.com/services/XXXXXXXXX/YYYYYYYYY/ZZZZZZZZZZZZZZZZZZZZZZZZ",
+		Fields: []humio.SlackFieldEntryInput{
+			{"Link", "{url}" },
+			{"Query", "{query_string}" },
 		},
 	},
 }
@@ -1246,14 +1246,14 @@ var wantSlackPostMessageAction = humio.Action{
 	ID:     "",
 	Type: "SlackPostMessageAction",
 	Name:   "test-action",
-	Properties: map[string]interface{}{
-		"apiToken": "12345678901234567890123456789012",
-		"channels": []interface{}{"#alerts", "ops"},
-		"fields": map[string]interface{}{
-			"Link":  "{url}",
-			"Query": "{query_string}",
+	SlackPostMessageAction: humio.SlackPostMessageAction{
+		ApiToken: "12345678901234567890123456789012",
+		Channels: []string{"#alerts", "ops"},
+		Fields: []humio.SlackFieldEntryInput{
+			{"Link", "{url}" },
+			{"Query", "{query_string}" },
 		},
-		"useProxy": true,
+		UseProxy: true,
 	},
 }
 
@@ -1261,23 +1261,23 @@ var wantVictorOpsAction = humio.Action{
 	ID:     "",
 	Type: "VictorOpsAction",
 	Name:   "test-action",
-	Properties: map[string]interface{}{
-		"messageType": "12345678901234567890123456789012",
-		"notifyUrl":   "https://example.org",
+	VictorOpsAction: humio.VictorOpsAction{
+		MessageType: "12345678901234567890123456789012",
+		NotifyUrl:   "https://example.org",
 	},
 }
 
-var wantWebHookAction = humio.Action{
+var wantWebhookAction = humio.Action{
 	ID:     "",
-	Type: "WebHookAction",
+	Type: "WebhookAction",
 	Name:   "test-action",
-	Properties: map[string]interface{}{
-		"bodyTemplate": "12345678901234567890123456789012",
-		"headers": map[string]interface{}{
-			"token": "abcdefghij123456678",
+	WebhookAction: humio.WebhookAction{
+		BodyTemplate: "12345678901234567890123456789012",
+		Headers: []humio.HttpHeaderEntryInput{
+			{"Token", "abcdefghij123456678"},
 		},
-		"method": "POST",
-		"url":    "https://example.org",
+		Method: "POST",
+		Url:    "https://example.org",
 	},
 }
 
@@ -1372,15 +1372,15 @@ func TestEncodeDecodeVictorOpsActionResource(t *testing.T) {
 	}
 }
 
-func TestEncodeDecodeWebHookActionResource(t *testing.T) {
+func TestEncodeDecodeWebhookActionResource(t *testing.T) {
 	res := resourceAction()
 	data := res.TestResourceData()
-	resourceDataFromAction(&wantWebHookAction, data)
+	resourceDataFromAction(&wantWebhookAction, data)
 	got, err := actionFromResourceData(data)
 	if err != nil {
 		t.Fatal(err)
 	}
-	if !cmp.Equal(wantWebHookAction, got) {
-		t.Error(cmp.Diff(wantWebHookAction, got))
+	if !cmp.Equal(wantWebhookAction, got) {
+		t.Error(cmp.Diff(wantWebhookAction, got))
 	}
 }

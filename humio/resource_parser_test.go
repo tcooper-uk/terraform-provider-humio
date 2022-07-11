@@ -136,7 +136,6 @@ func testAccCheckParserDestroy(s *terraform.State) error {
 		resp, err := conn.Parsers().Get(parts[0], parts[1])
 		emptyParser := humio.Parser{
 			Name:      "",
-			Tests:     []humio.ParserTestCase{},
 			Example:   "",
 			Script:    "",
 			TagFields: nil,

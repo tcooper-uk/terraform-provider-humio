@@ -224,19 +224,15 @@ resource "humio_alert" "test" {
 `
 
 var wantAlert = humio.Alert{
-	ID:   "",
-	Name: "over 1000 errors last 5 minutes",
-	Query: humio.HumioQuery{
-		QueryString: "loglevel=ERROR | count() > 1000",
-		Start:       "15m",
-		End:         "now",
-		IsLive:      true,
-	},
+	ID:                 "",
+	Name:               "over 1000 errors last 5 minutes",
 	Description:        "errors occurred",
 	ThrottleTimeMillis: 3600000,
-	Silenced:           false,
-	Actions:          []string{"action1", "action2"},
+	Enabled:            true,
+	Actions:            []string{"action1", "action2"},
 	Labels:             []string{"important", "error"},
+	QueryString:        "loglevel=ERROR | count() > 1000",
+	QueryStart:         "15m",
 }
 
 func TestEncodeDecodeAlertResource(t *testing.T) {
