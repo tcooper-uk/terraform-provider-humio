@@ -1,6 +1,6 @@
 module github.com/humio/terraform-provider-humio
 
-go 1.15
+go 1.19
 
 require (
 	cloud.google.com/go v0.70.0 // indirect
@@ -30,7 +30,7 @@ require (
 	github.com/zclconf/go-cty v1.7.0 // indirect
 	golang.org/x/crypto v0.0.0-20201016220609-9e8e0b390897 // indirect
 	golang.org/x/net v0.0.0-20201031054903-ff519b6c9102 // indirect
-	golang.org/x/sys v0.0.0-20201101102859-da207088b7d1 // indirect
+	golang.org/x/sys v0.2.0 // indirect
 	golang.org/x/text v0.3.4 // indirect
 	golang.org/x/tools v0.0.0-20201102043006-b53d4cbd60a6 // indirect
 	google.golang.org/api v0.34.0 // indirect
