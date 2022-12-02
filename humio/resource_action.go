@@ -568,7 +568,7 @@ func slackpostmessageFromAction(a *humio.Action) []tfMap {
 	}
 	s["api_token"] = a.SlackPostMessageAction.ApiToken
 	s["channels"] = a.SlackPostMessageAction.Channels
-	s["fields"] = a.SlackPostMessageAction.Fields
+	s["fields"] = fields
 	s["use_proxy"] = a.SlackPostMessageAction.UseProxy
 	return []tfMap{s}
 }
