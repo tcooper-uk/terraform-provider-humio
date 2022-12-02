@@ -11,6 +11,19 @@ resource "humio_alert" "example_alert_with_labels" {
   start                = "24h"
 }
 
+resource "humio_alert" "example_alert_with_throttle_field" {
+  repository  = humio_action.example_email.repository
+  name        = "example_alert_with_throttle_field"
+
+  actions   = [humio_action.example_email.action_id]
+
+  throttle_time_millis = 300000
+  throttle_field       = "serviceName"
+  enabled              = true
+  query                = "level = ERROR"
+  start                = "24h"
+}
+
 resource "humio_alert" "example_alert_without_labels" {
   repository = humio_action.example_email_body.repository
   name       = "example_alert_without_labels"

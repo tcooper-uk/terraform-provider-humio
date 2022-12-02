@@ -63,6 +63,10 @@ func resourceAlert() *schema.Resource {
 				Required: true,
 				// TODO: Figure out if we want to accept similar input as "start", if yes reuse the ValidateDiagFunc for "start" and rename this field.
 			},
+			"throttle_field": {
+				Type:     schema.TypeString,
+				Optional: true,
+			},
 			"start": {
 				Type:     schema.TypeString,
 				Required: true,
@@ -150,6 +154,10 @@ func resourceDataFromAlert(a *humio.Alert, d *schema.ResourceData) diag.Diagnost
 	if err != nil {
 		return diag.Errorf("error setting throttle_time_millis for resource %s: %s", d.Id(), err)
 	}
+	err = d.Set("throttle_field", a.ThrottleField)
+	if err != nil {
+		return diag.Errorf("error setting throttle_field for resource %s: %s", d.Id(), err)
+	}
 	err = d.Set("enabled", a.Enabled)
 	if err != nil {
 		return diag.Errorf("error setting enabled for resource %s: %s", d.Id(), err)
@@ -212,6 +220,7 @@ func alertFromResourceData(d *schema.ResourceData) (humio.Alert, error) {
 		Name:               d.Get("name").(string),
 		Description:        d.Get("description").(string),
 		ThrottleTimeMillis: d.Get("throttle_time_millis").(int),
+		ThrottleField:      d.Get("throttle_field").(string),
 		Enabled:            d.Get("enabled").(bool),
 		Actions:            convertInterfaceListToStringSlice(d.Get("actions").([]interface{})),
 		Labels:             convertInterfaceListToStringSlice(d.Get("labels").([]interface{})),
