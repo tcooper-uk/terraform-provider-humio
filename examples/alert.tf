@@ -1,8 +1,8 @@
 resource "humio_alert" "example_alert_with_labels" {
-  repository  = humio_action.example_email.repository
-  name        = "example_alert_with_labels"
+  repository = humio_action.example_email.repository
+  name       = "example_alert_with_labels"
 
-  actions   = [humio_action.example_email.action_id]
+  actions = [humio_action.example_email.action_id]
 
   labels               = ["terraform", "ops"]
   throttle_time_millis = 300000
@@ -12,8 +12,8 @@ resource "humio_alert" "example_alert_with_labels" {
 }
 
 resource "humio_alert" "example_alert_without_labels" {
-  repository  = humio_action.example_email_body.repository
-  name        = "example_alert_without_labels"
+  repository = humio_action.example_email_body.repository
+  name       = "example_alert_without_labels"
 
   actions = [humio_action.example_email_body.action_id]
 

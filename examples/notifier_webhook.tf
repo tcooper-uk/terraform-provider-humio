@@ -1,11 +1,11 @@
 resource "humio_action" "example_webhook" {
   repository = "humio"
   name       = "example_webhook"
-  type     = "WebHookAction"
+  type       = "WebHookAction"
 
   webhook {
-    method  = "POST"
-    url     = "http://webhook.site/#!/1bb57835-4df2-42a4-84ae-fa5379ee4deb"
+    method = "POST"
+    url    = "http://webhook.site/#!/1bb57835-4df2-42a4-84ae-fa5379ee4deb"
     headers = {
       Content-Type = "application/json"
     }

@@ -1,10 +1,10 @@
 resource "humio_action" "example_slack" {
   repository = "humio"
   name       = "example_slack"
-  type     = "SlackAction"
+  type       = "SlackAction"
 
   slack {
-    url    = "https://hooks.slack.com/services/XXXXXXXXX/YYYYYYYYY/ZZZZZZZZZZZZZZZZZZZZZZZZ"
+    url = "https://hooks.slack.com/services/XXXXXXXXX/YYYYYYYYY/ZZZZZZZZZZZZZZZZZZZZZZZZ"
     fields = {
       "Events String" = "{events_str}"
       "Query"         = "{query_string}"

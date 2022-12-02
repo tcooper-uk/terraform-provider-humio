@@ -1,7 +1,7 @@
 resource "humio_action" "example_email" {
   repository = "sandbox"
   name       = "example_email"
-  type     = "EmailAction"
+  type       = "EmailAction"
 
   email {
     recipients = ["ops@example.com"]
@@ -11,7 +11,7 @@ resource "humio_action" "example_email" {
 resource "humio_action" "example_email_body" {
   repository = "humio"
   name       = "example_email_body"
-  type     = "EmailAction"
+  type       = "EmailAction"
 
   email {
     recipients    = ["ops@example.com"]
@@ -22,7 +22,7 @@ resource "humio_action" "example_email_body" {
 resource "humio_action" "example_email_subject" {
   repository = "humio"
   name       = "example_email_subject"
-  type     = "EmailAction"
+  type       = "EmailAction"
 
   email {
     recipients       = ["ops@example.com"]
@@ -33,7 +33,7 @@ resource "humio_action" "example_email_subject" {
 resource "humio_action" "example_email_body_subject" {
   repository = "humio"
   name       = "example_email_body_subject"
-  type     = "EmailAction"
+  type       = "EmailAction"
 
   email {
     recipients       = ["ops@example.com"]

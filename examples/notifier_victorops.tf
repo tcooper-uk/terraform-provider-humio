@@ -1,7 +1,7 @@
 resource "humio_action" "example_victorops" {
   repository = "humio"
   name       = "example_victorops"
-  type     = "VictorOpsAction"
+  type       = "VictorOpsAction"
 
   victorops {
     message_type = "critical"
