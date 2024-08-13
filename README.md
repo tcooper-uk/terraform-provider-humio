@@ -5,7 +5,7 @@ A (maintained) fork of https://github.com/humio/terraform-provider-humio which w
 ## Currently tested with
 
 - [Terraform](https://www.terraform.io/downloads.html) v1.5.7
-- [Go](https://golang.org/doc/install) 1.21 (to build the provider plugin)
+- [Go](https://golang.org/doc/install) 1.22 (to build the provider plugin)
 
 ## Installing the provider
 
