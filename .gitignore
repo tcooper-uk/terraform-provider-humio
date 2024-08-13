@@ -4,3 +4,5 @@ main
 .terraform.*
 terraform.tfstate
 terraform.tfstate.*
+
+.idea
