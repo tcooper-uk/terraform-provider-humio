@@ -72,10 +72,19 @@ func resourceViewCreate(ctx context.Context, d *schema.ResourceData, client inte
 		return diag.Errorf("count not obtain view from resource data: %s", err)
 	}
 
-	client.(*humio.Client).Views().Create(view.Name, view.Description, []humio.ViewConnectionInput{{
-		RepositoryName: graphql.String(view.Connections[0].RepoName),
-		Filter:         graphql.String(view.Connections[0].Filter),
-	}})
+	var viewConnectionInput []humio.ViewConnectionInput
+	for _, repository := range view.Connections {
+		viewConnectionInput = append(viewConnectionInput, humio.ViewConnectionInput{
+			RepositoryName: graphql.String(repository.RepoName),
+			Filter:         graphql.String(repository.Filter),
+		})
+	}
+	err = client.(*humio.Client).Views().Create(view.Name, view.Description, viewConnectionInput)
+	if err != nil {
+		return diag.Errorf("error creatuing view name for resource %s: %s", view.Name, err)
+	}
+
+	d.SetId(view.Name)
 
 	return resourceViewRead(ctx, d, client)
 }

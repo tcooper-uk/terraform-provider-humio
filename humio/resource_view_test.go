@@ -47,7 +47,7 @@ func TestAccViewBasic(t *testing.T) {
 		{
 			Config: viewBasic,
 			Check: resource.ComposeTestCheckFunc(
-				resource.TestCheckResourceAttr("humio_view.test", "repository.0.name", "sandbox"),
+				resource.TestCheckResourceAttr("humio_view.test", "repository.0.name", "allthelogs"),
 				resource.TestCheckResourceAttr("humio_view.test", "repository.0.filter", "*"),
 				resource.TestCheckResourceAttr("humio_view.test", "repository.#", "1"),
 				resource.TestCheckResourceAttr("humio_view.test", "name", "simple-view"),
@@ -61,7 +61,7 @@ func TestAccViewBasicToFull(t *testing.T) {
 		{
 			Config: viewBasic,
 			Check: resource.ComposeTestCheckFunc(
-				resource.TestCheckResourceAttr("humio_view.test", "repository.0.name", "sandbox"),
+				resource.TestCheckResourceAttr("humio_view.test", "repository.0.name", "allthelogs"),
 				resource.TestCheckResourceAttr("humio_view.test", "repository.0.filter", "*"),
 				resource.TestCheckResourceAttr("humio_view.test", "repository.#", "1"),
 				resource.TestCheckResourceAttr("humio_view.test", "name", "simple-view"),
@@ -71,10 +71,10 @@ func TestAccViewBasicToFull(t *testing.T) {
 		{
 			Config: viewFull,
 			Check: resource.ComposeTestCheckFunc(
-				resource.TestCheckResourceAttr("humio_view.test", "repository.0.name", "sandbox"),
+				resource.TestCheckResourceAttr("humio_view.test", "repository.0.name", "allthelogs"),
 				resource.TestCheckResourceAttr("humio_view.test", "repository.0.filter", "*"),
-				resource.TestCheckResourceAttr("humio_view.test", "repository.0.name", "sandbox-2"),
-				resource.TestCheckResourceAttr("humio_view.test", "repository.0.filter", "*"),
+				resource.TestCheckResourceAttr("humio_view.test", "repository.1.name", "allthelogs"),
+				resource.TestCheckResourceAttr("humio_view.test", "repository.1.filter", "test=test"),
 				resource.TestCheckResourceAttr("humio_view.test", "repository.#", "2"),
 				resource.TestCheckResourceAttr("humio_view.test", "name", "simple-view"),
 				resource.TestCheckResourceAttr("humio_view.test", "description", "a description"),
@@ -85,10 +85,10 @@ func TestAccViewBasicToFull(t *testing.T) {
 		{
 			Config: viewFull,
 			Check: resource.ComposeTestCheckFunc(
-				resource.TestCheckResourceAttr("humio_view.test", "repository.0.name", "sandbox"),
+				resource.TestCheckResourceAttr("humio_view.test", "repository.0.name", "allthelogs"),
 				resource.TestCheckResourceAttr("humio_view.test", "repository.0.filter", "*"),
-				resource.TestCheckResourceAttr("humio_view.test", "repository.0.name", "sandbox-2"),
-				resource.TestCheckResourceAttr("humio_view.test", "repository.0.filter", "*"),
+				resource.TestCheckResourceAttr("humio_view.test", "repository.1.name", "allthelogs"),
+				resource.TestCheckResourceAttr("humio_view.test", "repository.1.filter", "test=test"),
 				resource.TestCheckResourceAttr("humio_view.test", "repository.#", "2"),
 				resource.TestCheckResourceAttr("humio_view.test", "name", "simple-view"),
 				resource.TestCheckResourceAttr("humio_view.test", "description", "a description"),
@@ -102,10 +102,10 @@ func TestAccViewFull(t *testing.T) {
 		{
 			Config: viewFull,
 			Check: resource.ComposeTestCheckFunc(
-				resource.TestCheckResourceAttr("humio_view.test", "repository.0.name", "sandbox"),
+				resource.TestCheckResourceAttr("humio_view.test", "repository.0.name", "allthelogs"),
 				resource.TestCheckResourceAttr("humio_view.test", "repository.0.filter", "*"),
-				resource.TestCheckResourceAttr("humio_view.test", "repository.0.name", "sandbox-2"),
-				resource.TestCheckResourceAttr("humio_view.test", "repository.0.filter", "*"),
+				resource.TestCheckResourceAttr("humio_view.test", "repository.1.name", "allthelogs"),
+				resource.TestCheckResourceAttr("humio_view.test", "repository.1.filter", "test=test"),
 				resource.TestCheckResourceAttr("humio_view.test", "repository.#", "2"),
 				resource.TestCheckResourceAttr("humio_view.test", "name", "simple-view"),
 				resource.TestCheckResourceAttr("humio_view.test", "description", "a description"),
@@ -150,7 +150,7 @@ resource "humio_view" "test" {
 	description     = "a description"
 
 	repository {
-		name	= "sandbox"
+		name	= "allthelogs"
 		filter	= "*"
 	}
 }
@@ -162,12 +162,12 @@ resource "humio_view" "test" {
 	description     = "a description"
 
 	repository {
-		name	= "sandbox"
+		name	= "allthelogs"
 		filter	= "*"
 	}
 
 	repository {
-		name	= "sandbox-2"
+		name	= "allthelogs"
 		filter	= "test=test"
 	}
 }
@@ -177,7 +177,7 @@ var wantView = humio.View{
 	Name:        "simple-view",
 	Description: "a description",
 	Connections: []humio.ViewConnection{{
-		RepoName: "sandbox",
+		RepoName: "allthelogs",
 		Filter:   "*",
 	}},
 }
