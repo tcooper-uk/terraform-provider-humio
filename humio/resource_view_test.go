@@ -47,13 +47,13 @@ func TestAccViewBasic(t *testing.T) {
 		{
 			Config: viewBasic,
 			Check: resource.ComposeTestCheckFunc(
-				resource.TestCheckResourceAttr("humio_view.test", "repository.0.name", "first"),
+				resource.TestCheckResourceAttr("humio_view.test", "repository.0.name", "sandbox"),
 				resource.TestCheckResourceAttr("humio_view.test", "repository.0.filter", "*"),
+				resource.TestCheckResourceAttr("humio_view.test", "repository.#", "1"),
 				resource.TestCheckResourceAttr("humio_view.test", "name", "simple-view"),
-				resource.TestCheckResourceAttr("humio_view.test", "description", "a description"),
 			),
 		},
-	}, testAccCheckAlertDestroy)
+	}, testAccCheckViewDestroy)
 }
 
 func TestAccViewBasicToFull(t *testing.T) {
@@ -61,37 +61,37 @@ func TestAccViewBasicToFull(t *testing.T) {
 		{
 			Config: viewBasic,
 			Check: resource.ComposeTestCheckFunc(
-				resource.TestCheckResourceAttr("humio_view.test", "repository", "sandbox"),
-				resource.TestCheckResourceAttr("humio_view.test", "name", "alert-test"),
-				resource.TestCheckResourceAttr("humio_view.test", "throttle_time_millis", "3600000"),
-				resource.TestCheckResourceAttr("humio_view.test", "start", "24h"),
-				resource.TestCheckResourceAttr("humio_view.test", "query", "loglevel=ERROR"),
-				resource.TestCheckResourceAttr("humio_view.test", "description", "some text"),
-				resource.TestCheckResourceAttr("humio_view.test", "silenced", "true"),
-				resource.TestCheckResourceAttr("humio_view.test", "labels.#", "2"),
-				resource.TestCheckResourceAttr("humio_view.test", "labels.0", "errors"),
-				resource.TestCheckResourceAttr("humio_view.test", "labels.1", "important"),
-				resource.TestCheckResourceAttr("humio_view.test", "actions.#", "1"),
-				resource.TestCheckResourceAttrSet("humio_view.test", "actions.0"),
+				resource.TestCheckResourceAttr("humio_view.test", "repository.0.name", "sandbox"),
+				resource.TestCheckResourceAttr("humio_view.test", "repository.0.filter", "*"),
+				resource.TestCheckResourceAttr("humio_view.test", "repository.#", "1"),
+				resource.TestCheckResourceAttr("humio_view.test", "name", "simple-view"),
+				resource.TestCheckResourceAttr("humio_view.test", "description", "a description"),
+			),
+		},
+		{
+			Config: viewFull,
+			Check: resource.ComposeTestCheckFunc(
+				resource.TestCheckResourceAttr("humio_view.test", "repository.0.name", "sandbox"),
+				resource.TestCheckResourceAttr("humio_view.test", "repository.0.filter", "*"),
+				resource.TestCheckResourceAttr("humio_view.test", "repository.0.name", "sandbox-2"),
+				resource.TestCheckResourceAttr("humio_view.test", "repository.0.filter", "*"),
+				resource.TestCheckResourceAttr("humio_view.test", "repository.#", "2"),
+				resource.TestCheckResourceAttr("humio_view.test", "name", "simple-view"),
+				resource.TestCheckResourceAttr("humio_view.test", "description", "a description"),
 			),
 			PlanOnly:           true,
 			ExpectNonEmptyPlan: true,
 		},
 		{
-			Config: viewBasic,
+			Config: viewFull,
 			Check: resource.ComposeTestCheckFunc(
-				resource.TestCheckResourceAttr("humio_view.test", "repository", "sandbox"),
-				resource.TestCheckResourceAttr("humio_view.test", "name", "alert-test"),
-				resource.TestCheckResourceAttr("humio_view.test", "throttle_time_millis", "3600000"),
-				resource.TestCheckResourceAttr("humio_view.test", "start", "24h"),
-				resource.TestCheckResourceAttr("humio_view.test", "query", "loglevel=ERROR"),
-				resource.TestCheckResourceAttr("humio_view.test", "description", "some text"),
-				resource.TestCheckResourceAttr("humio_view.test", "silenced", "true"),
-				resource.TestCheckResourceAttr("humio_view.test", "labels.#", "2"),
-				resource.TestCheckResourceAttr("humio_view.test", "labels.0", "errors"),
-				resource.TestCheckResourceAttr("humio_view.test", "labels.1", "important"),
-				resource.TestCheckResourceAttr("humio_view.test", "actions.#", "1"),
-				resource.TestCheckResourceAttrSet("humio_view.test", "actions.0"),
+				resource.TestCheckResourceAttr("humio_view.test", "repository.0.name", "sandbox"),
+				resource.TestCheckResourceAttr("humio_view.test", "repository.0.filter", "*"),
+				resource.TestCheckResourceAttr("humio_view.test", "repository.0.name", "sandbox-2"),
+				resource.TestCheckResourceAttr("humio_view.test", "repository.0.filter", "*"),
+				resource.TestCheckResourceAttr("humio_view.test", "repository.#", "2"),
+				resource.TestCheckResourceAttr("humio_view.test", "name", "simple-view"),
+				resource.TestCheckResourceAttr("humio_view.test", "description", "a description"),
 			),
 		},
 	}, testAccCheckViewDestroy)
@@ -100,20 +100,15 @@ func TestAccViewBasicToFull(t *testing.T) {
 func TestAccViewFull(t *testing.T) {
 	accTestCase(t, []resource.TestStep{
 		{
-			Config: viewBasic,
+			Config: viewFull,
 			Check: resource.ComposeTestCheckFunc(
-				resource.TestCheckResourceAttr("humio_view.test", "repository", "sandbox"),
-				resource.TestCheckResourceAttr("humio_view.test", "name", "alert-test"),
-				resource.TestCheckResourceAttr("humio_view.test", "throttle_time_millis", "3600000"),
-				resource.TestCheckResourceAttr("humio_view.test", "start", "24h"),
-				resource.TestCheckResourceAttr("humio_view.test", "query", "loglevel=ERROR"),
-				resource.TestCheckResourceAttr("humio_view.test", "description", "some text"),
-				resource.TestCheckResourceAttr("humio_view.test", "silenced", "true"),
-				resource.TestCheckResourceAttr("humio_view.test", "labels.#", "2"),
-				resource.TestCheckResourceAttr("humio_view.test", "labels.0", "errors"),
-				resource.TestCheckResourceAttr("humio_view.test", "labels.1", "important"),
-				resource.TestCheckResourceAttr("humio_view.test", "actions.#", "1"),
-				resource.TestCheckResourceAttrSet("humio_view.test", "actions.0"),
+				resource.TestCheckResourceAttr("humio_view.test", "repository.0.name", "sandbox"),
+				resource.TestCheckResourceAttr("humio_view.test", "repository.0.filter", "*"),
+				resource.TestCheckResourceAttr("humio_view.test", "repository.0.name", "sandbox-2"),
+				resource.TestCheckResourceAttr("humio_view.test", "repository.0.filter", "*"),
+				resource.TestCheckResourceAttr("humio_view.test", "repository.#", "2"),
+				resource.TestCheckResourceAttr("humio_view.test", "name", "simple-view"),
+				resource.TestCheckResourceAttr("humio_view.test", "description", "a description"),
 			),
 		},
 	}, testAccCheckViewDestroy)
@@ -126,7 +121,7 @@ func testAccCheckViewDestroy(s *terraform.State) error {
 		if rs.Type != "humio_view" {
 			continue
 		}
-		// TODO: Use rs.Primary.ID to figure out if alert exists, and not just list all alerts.
+		// TODO: Use rs.Primary.ID to figure out if view exists, and not just list all views.
 		resp, err := conn.Views().List()
 		if err == nil {
 			if len(resp) > 0 {
@@ -150,6 +145,18 @@ resource "humio_view" "test" {
 `
 
 const viewBasic = `
+resource "humio_view" "test" {
+	name            = "simple-view"
+	description     = "a description"
+
+	repository {
+		name	= "sandbox"
+		filter	= "*"
+	}
+}
+`
+
+const viewFull = `
 resource "humio_view" "test" {
 	name            = "simple-view"
 	description     = "a description"
